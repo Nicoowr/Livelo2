@@ -4,8 +4,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcV;
+import android.view.View;
+
 
 import java.io.IOException;
 
@@ -14,24 +17,8 @@ import java.io.IOException;
  */
 
 public class NfcLivelo {
-    private NfcAdapter myNfcAdapter;
-    private PendingIntent mPendingIntent;
-    private IntentFilter[] mFilters;
-    private String[][] mTechLists;
 
-    public NfcLivelo(){
-        myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        mPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        IntentFilter nfcv = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
-        mFilters = new IntentFilter[]{
-                nfcv,
-        };
-        mTechLists = new String[][]{new String[]{NfcV.class.getName()},
-                new String[]{NdefFormatable.class.getName()}};
-
-    }
-    public String getId(){
+    public static String getId(NfcV nfcv){
         StringBuilder idStr = new StringBuilder();
         byte id[] = {0};
 
@@ -52,6 +39,8 @@ public class NfcLivelo {
         }
         return idStr.toString();
     }
+
+
     public int getBatteryLevel(){
         return 0;
     }

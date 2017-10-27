@@ -1,6 +1,12 @@
 package ch.livelo.livelo2;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.NdefFormatable;
+import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +22,13 @@ import android.view.MenuItem;
 
 public class CurrentSensor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    enum Action{INFO, COLLECT, LAUNCH, NEW};
+    private NfcAdapter myNfcAdapter;
+    private PendingIntent mPendingIntent;
+    private IntentFilter[] mFilters;
+    private String[][] mTechLists;
+    private Action action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +46,40 @@ public class CurrentSensor extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // NFC Intent filter
+        myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        mPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter nfcv = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
+        mFilters = new IntentFilter[]{
+                nfcv,
+        };
+        mTechLists = new String[][]{new String[]{NfcV.class.getName()},
+                new String[]{NdefFormatable.class.getName()}};
+
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+
+        Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        NfcV nfcv = NfcV.get(detectedTag);
+        String id = NfcLivelo.getId(nfcv);
+
+        switch (action){
+            case INFO:
+                intent = new Intent(CurrentSensor.this, SensorInfoActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+                break;
+            case COLLECT:
+                break;
+            case LAUNCH:
+                break;
+            case NEW:
+                break;
+        }
     }
 
     @Override
