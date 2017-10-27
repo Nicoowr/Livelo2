@@ -1,4 +1,4 @@
-package ch.livelo.livelo2.DB;
+package ch.livelo.livelo2;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -19,6 +19,18 @@ public class NfcLivelo {
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
 
+    public NfcLivelo(){
+        myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        mPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter nfcv = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
+        mFilters = new IntentFilter[]{
+                nfcv,
+        };
+        mTechLists = new String[][]{new String[]{NfcV.class.getName()},
+                new String[]{NdefFormatable.class.getName()}};
+
+    }
     public String getId(){
         StringBuilder idStr = new StringBuilder();
         byte id[] = {0};
@@ -31,7 +43,6 @@ public class NfcLivelo {
             }
         } catch (IOException e) {
         }
-        //for (int i = 2; i < id.length-2; i++) {//
         for (int i = id.length-3; i > 1; i--) {//
             String hex = Integer.toHexString(0xFF & id[i]);
             if (hex.length() == 1) {//if string is empty
