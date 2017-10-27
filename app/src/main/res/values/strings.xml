@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">Livelo2</string>
 
+    <string name="enter_sensor_name">Name</string>
+    <string name="enter_sensor_id">ID</string>
+    <string name="enter_sensor_latitude">Latitude</string>
+    <string name="enter_sensor_longitude"> Longitude</string>
+    <string name="enter_sensor_depth">Depth</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
