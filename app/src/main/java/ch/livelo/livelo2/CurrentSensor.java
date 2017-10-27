@@ -1,5 +1,6 @@
 package ch.livelo.livelo2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,15 +24,6 @@ public class CurrentSensor extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -80,19 +72,32 @@ public class CurrentSensor extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        Intent intent;
+        switch(id){
+            case R.id.nav_current_sensor:
+                intent = new Intent(CurrentSensor.this, CurrentSensor.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_my_sensors:
+                intent = new Intent(CurrentSensor.this, MySensors.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_my_data:
+                //intent = new Intent(CurrentSensor.this, SettingsActivity.class);
+                //startActivity(intent);
+                break;
+            case R.id.nav_help:
+                //intent = new Intent(CurrentSensor.this, SettingsActivity.class);
+                //startActivity(intent);
+                break;
+            case R.id.nav_settings:
+                intent = new Intent(CurrentSensor.this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_send:
+                //intent = new Intent(CurrentSensor.this, SettingsActivity.class);
+                //startActivity(intent);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
