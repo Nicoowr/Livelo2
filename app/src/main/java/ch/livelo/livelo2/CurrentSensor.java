@@ -87,8 +87,8 @@ public class CurrentSensor extends AppCompatActivity
                 //startActivity(intent);
                 break;
             case R.id.nav_help:
-                //intent = new Intent(CurrentSensor.this, SettingsActivity.class);
-                //startActivity(intent);
+                intent = new Intent(CurrentSensor.this, HelpActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_settings:
                 intent = new Intent(CurrentSensor.this, SettingsActivity.class);
