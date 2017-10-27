@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="ch.livelo.livelo2.SensorInfoActivity">
 
+    <TextView
+        android:id="@+id/tv_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="id of the sensor here"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
 </android.support.constraint.ConstraintLayout>

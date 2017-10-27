@@ -12,32 +12,36 @@
         android:id="@+id/button_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="goToInfo"
         android:text="Get Sensor's info"
-        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp" />
 
     <Button
         android:id="@+id/button_collect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Collect Data"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="64dp" />
+        app:layout_constraintTop_toBottomOf="@+id/button_info"
+        tools:layout_editor_absoluteX="16dp" />
 
     <Button
         android:id="@+id/button_launch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Launch Sampling"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="112dp" />
+        app:layout_constraintTop_toBottomOf="@+id/button_collect"
+        tools:layout_editor_absoluteX="16dp" />
 
     <Button
         android:id="@+id/button_new"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="New Sensor"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="160dp" />
+        app:layout_constraintTop_toBottomOf="@+id/button_launch"
+        tools:layout_editor_absoluteX="16dp" />
 
 </android.support.constraint.ConstraintLayout>

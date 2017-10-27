@@ -41,7 +41,15 @@ public class NfcLivelo {
     }
 
 
-    public int getBatteryLevel(){
+    public static int getBatteryLevel(){
+        return 0;
+    }
+
+    public static int collectData(){
+        return 0;
+    }
+
+    public static int getSamplingsNumber(){
         return 0;
     }
 }

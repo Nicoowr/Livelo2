@@ -60,8 +60,17 @@ public class CurrentSensor extends AppCompatActivity
 
     }
 
+    public void goToInfo(){
+        action = action.INFO;
+        if (myNfcAdapter != null)
+            myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        // ajouter un truc pour montrer que ça attend
+    }
+
     @Override
     public void onNewIntent(Intent intent) {
+
+        // enlever le truc qui montre que ça attend
 
         Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         NfcV nfcv = NfcV.get(detectedTag);
