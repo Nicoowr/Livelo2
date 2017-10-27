@@ -1,4 +1,4 @@
-package ch.livelo.livelo2.DB;
+package ch.livelo.livelo2;
 
 import android.app.PendingIntent;
 import android.content.Intent;
