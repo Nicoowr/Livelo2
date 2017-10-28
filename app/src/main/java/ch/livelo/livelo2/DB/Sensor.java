@@ -2,6 +2,7 @@ package ch.livelo.livelo2.DB;
 
 /**
  * Created by Nico on 27/10/2017.
+ * TODO fonction check valid input pour vérifier avant d'enregistrer
  */
 
 public class Sensor {
@@ -17,6 +18,9 @@ public class Sensor {
     public Sensor(){
     }
 
+    public Sensor(String id){
+        this.sensor_id = id;
+    }
     public Sensor(String name, String id){
         this.name = name;
         this.sensor_id = id;
@@ -71,6 +75,7 @@ public class Sensor {
         return this.depth;
     }
 
+    // je crois que Ca marche pas ça, ça va renvoyer le pointeur mais pas le tableau, c'est dangereux
     public double[] getPosition(){
         double[] position = {this.latitude, this.longitude};
         return position;

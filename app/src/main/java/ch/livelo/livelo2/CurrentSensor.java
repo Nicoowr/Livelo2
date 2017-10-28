@@ -1,6 +1,7 @@
 package ch.livelo.livelo2;
 
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
@@ -10,6 +11,7 @@ import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -91,13 +93,14 @@ public class CurrentSensor extends AppCompatActivity
 
 
     @Override
-    public void onNewIntent(Intent intent) {
+    public void onNewIntent(Intent intentNfc) {
 
         layout_wait.setVisibility(View.INVISIBLE);
 
-        Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        Tag detectedTag = intentNfc.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         NfcV nfcv = NfcV.get(detectedTag);
-        String id = NfcLivelo.getId(nfcv);
+        final String id = NfcLivelo.getId(nfcv);
+        Intent intent;
 
         switch (action){
             case INFO:
@@ -113,11 +116,44 @@ public class CurrentSensor extends AppCompatActivity
                 if (NfcLivelo.launchSampling(period)) Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
                 else Toast.makeText(getBaseContext(), "error launching samplings", Toast.LENGTH_SHORT).show();
                 break;
-            case NEW:
+            case NEW: // dialog box si le capteur existe deja
+                if(true){ // TODO regarder si le capteur de cet id existe déjà
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("This sensor is already registered");
+                    builder.setMessage("Do you want to overwrite the previous data?");
+                    //TODO: maybe display the sensor data here
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            //Intent intent = new Intent(CurrentSensor.this, SensorInfoActivity.class);
+                            //intent.putExtra("id", id);
+                            //startActivity(intent);
+
+                            Intent intent = new Intent(CurrentSensor.this, NewSensor.class);
+                            intent.putExtra("id", id);
+                            intent.putExtra("new", false);
+                            startActivity(intent);
+                        }
+                    });
+
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            action = Action.INFO;
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else{
+                    intent = new Intent(CurrentSensor.this, NewSensor.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("new", true);
+                    startActivity(intent);
+                }
                 Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
-                //intent = new Intent(CurrentSensor.this, NewSensor.class);
-                //intent.putExtra("id", id);
-                //startActivity(intent);
                 break;
         }
     }

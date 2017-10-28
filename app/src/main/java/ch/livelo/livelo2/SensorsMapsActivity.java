@@ -1,9 +1,12 @@
 package ch.livelo.livelo2;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -15,6 +18,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class SensorsMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +29,8 @@ public class SensorsMapsActivity extends FragmentActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
 
@@ -42,9 +49,14 @@ public class SensorsMapsActivity extends FragmentActivity implements OnMapReadyC
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Intent intent = getIntent();
+        LatLng pos = new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lng", 0));
+        mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10));
     }
+
+
 
     //@Override
     //public boolean onMarkerClick(final Marker marker) {

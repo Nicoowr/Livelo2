@@ -3,6 +3,8 @@
     package="ch.livelo.livelo2">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -40,6 +42,9 @@
         <activity
             android:name=".SensorInfoActivity"
             android:parentActivityName=".CurrentSensor" />
+        <activity
+            android:name=".NewSensor"
+            android:parentActivityName=".CurrentSensor" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -56,6 +61,7 @@
             android:name=".SensorsMapsActivity"
             android:label="@string/title_activity_sensors_maps"
             android:parentActivityName=".CurrentSensor" ></activity>
+        <service android:name=".GPS_Service"/>
     </application>
 
 </manifest>
