@@ -6,27 +6,30 @@ package ch.livelo.livelo2.DB;
 
 public class Sensor {
 
-    private String name;
-    private String sensor_id;
-    private double latitude;
-    private double longitude;
-    private double depth;
+    private String name = null;
+    private String sensor_id = null;
+    private double latitude = 0;
+    private double longitude = 0;
+    private double depth = 0;
     private Data data = null;
 
     //////////////////////Constructors///////////////////
+    public Sensor(){
+    }
+
     public Sensor(String name, String id){
         this.name = name;
         this.sensor_id = id;
     }
 
-    public Sensor(String name, String id, int latitude, int longitude){
+    public Sensor(String name, String id, double latitude, double longitude){
         this.name = name;
         this.sensor_id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public Sensor(String name, String id, int latitude, int longitude, int depth){
+    public Sensor(String name, String id, double latitude, double longitude, double depth){
         this.name = name;
         this.sensor_id = id;
         this.latitude = latitude;
@@ -44,12 +47,15 @@ public class Sensor {
         this.sensor_id = id;
     }
 
-    public void setPosition(int latitude, int longitude){
+    public void setLatitude(double latitude){
         this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude){
         this.longitude = longitude;
     }
 
-    public void setDepth(int depth){
+    public void setDepth(double depth){
         this.depth = depth;
     }
 

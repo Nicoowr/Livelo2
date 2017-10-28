@@ -2,8 +2,12 @@ package ch.livelo.livelo2.DB;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nico on 27/10/2017.
@@ -19,6 +23,11 @@ public class SensorDAO {
 
     protected SQLiteDatabase mDb = null;
     protected SensorDB mSensorDB = null;
+
+    private String[] allColumns = { mSensorDB.COLUMN_ID,mSensorDB.COLUMN_NAME,
+            mSensorDB.COLUMN_SENSOR_ID,mSensorDB.COLUMN_LATITUDE,mSensorDB.COLUMN_LONGITUDE,
+            mSensorDB.COLUMN_DEPTH};
+
 
     public SensorDAO(Context context) {
         this.mSensorDB = new SensorDB(context);
@@ -61,5 +70,32 @@ public class SensorDAO {
     public void deleteSensor(String sensor_id) {
         mDb.delete(SensorDB.TABLE_SENSORS, SensorDB.COLUMN_SENSOR_ID + " = ?", new String[] {sensor_id});
         //TODO : add a toast
+    }
+
+    public List<Sensor> getAllSensors() {
+        List<Sensor> sensors = new ArrayList<Sensor>();
+
+        Cursor cursor = mDb.query(SensorDB.TABLE_SENSORS,
+                allColumns, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Sensor sensor = cursorToComment(cursor);
+            sensors.add(sensor);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return sensors;
+    }
+
+    private Sensor cursorToComment(Cursor cursor) {
+        Sensor sensor = new Sensor();
+        sensor.setId(cursor.getString(1));
+        sensor.setName(cursor.getString(2));
+        sensor.setLatitude(cursor.getDouble(3));
+        sensor.setLongitude(cursor.getDouble(4));
+        sensor.setDepth(cursor.getDouble(5));
+        return sensor;
     }
 }

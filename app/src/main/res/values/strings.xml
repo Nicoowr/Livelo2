@@ -6,6 +6,7 @@
     <string name="enter_sensor_latitude">Latitude</string>
     <string name="enter_sensor_longitude"> Longitude</string>
     <string name="enter_sensor_depth">Depth</string>
+    <string name="save_new_sensor">Save</string>
 
     <string name="connect_the_sensor">Connect the sensor</string>
 
