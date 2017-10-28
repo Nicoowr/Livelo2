@@ -36,6 +36,11 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
+
+// TODO upload automatique ou pas
+// TODO Wifi only
+// TODO notifications on off
+
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     /**
@@ -139,6 +144,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, CurrentSensor.class);
+        startActivity(intent);
+    }
     /**
      * {@inheritDoc}
      */

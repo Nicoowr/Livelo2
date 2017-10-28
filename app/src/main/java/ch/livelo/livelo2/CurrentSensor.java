@@ -10,6 +10,7 @@ import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,16 +20,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class CurrentSensor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    enum Action{INFO, COLLECT, LAUNCH, NEW};
+    enum Action{INFO, COLLECT, LAUNCH, NEW}
     private NfcAdapter myNfcAdapter;
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
-    private Action action;
+    private Action action = Action.INFO;
+    private int period = 0;
+    private RelativeLayout layout_wait;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,9 @@ public class CurrentSensor extends AppCompatActivity
         setContentView(R.layout.activity_current_sensor);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -57,20 +65,35 @@ public class CurrentSensor extends AppCompatActivity
         };
         mTechLists = new String[][]{new String[]{NfcV.class.getName()},
                 new String[]{NdefFormatable.class.getName()}};
-
     }
 
-    public void goToInfo(){
-        action = action.INFO;
-        if (myNfcAdapter != null)
-            myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
-        // ajouter un truc pour montrer que ça attend
+    public void goToInfo(View view) {
+        action = Action.INFO;
+        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        layout_wait.setVisibility(View.VISIBLE);
     }
+    public void goToCollect(View view) {
+        action = Action.COLLECT;
+        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        layout_wait.setVisibility(View.VISIBLE);
+    }
+    public void goToLaunch(View view) {
+        // TODO dialog box to define the period
+        action = Action.LAUNCH;
+        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        layout_wait.setVisibility(View.VISIBLE);
+    }
+    public void goToNew(View view) {
+        action = Action.NEW;
+        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        layout_wait.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     public void onNewIntent(Intent intent) {
 
-        // enlever le truc qui montre que ça attend
+        layout_wait.setVisibility(View.INVISIBLE);
 
         Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         NfcV nfcv = NfcV.get(detectedTag);
@@ -83,10 +106,18 @@ public class CurrentSensor extends AppCompatActivity
                 startActivity(intent);
                 break;
             case COLLECT:
+                NfcLivelo.collectData();
+                Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
                 break;
             case LAUNCH:
+                if (NfcLivelo.launchSampling(period)) Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(getBaseContext(), "error launching samplings", Toast.LENGTH_SHORT).show();
                 break;
             case NEW:
+                Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
+                //intent = new Intent(CurrentSensor.this, NewSensor.class);
+                //intent.putExtra("id", id);
+                //startActivity(intent);
                 break;
         }
     }
@@ -97,7 +128,8 @@ public class CurrentSensor extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finish();
+            System.exit(0);
         }
     }
 
@@ -135,7 +167,11 @@ public class CurrentSensor extends AppCompatActivity
                 startActivity(intent);
                 break;
             case R.id.nav_my_sensors:
-                intent = new Intent(CurrentSensor.this, MySensors.class);
+                //intent = new Intent(CurrentSensor.this, MySensors.class);
+                //startActivity(intent);
+                break;
+            case R.id.nav_sensors_map:
+                intent = new Intent(CurrentSensor.this, SensorsMapsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_my_data:
