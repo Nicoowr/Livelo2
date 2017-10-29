@@ -25,9 +25,7 @@ public class SensorDAO {
     protected SQLiteDatabase mDb = null;
     protected SensorDB mSensorDB = null;
 
-    private String[] allColumns = { mSensorDB.COLUMN_ID,mSensorDB.COLUMN_NAME,
-            mSensorDB.COLUMN_SENSOR_ID,mSensorDB.COLUMN_LATITUDE,mSensorDB.COLUMN_LONGITUDE,
-            mSensorDB.COLUMN_DEPTH};
+
 
 
     public SensorDAO(Context context) {
@@ -57,6 +55,9 @@ public class SensorDAO {
         values.put(SensorDB.COLUMN_LATITUDE, latitude);
         values.put(SensorDB.COLUMN_LONGITUDE, longitude);
         values.put(SensorDB.COLUMN_DEPTH, depth);
+        values.put(SensorDB.COLUMN_FREQUENCY, 0);
+        values.put(SensorDB.COLUMN_DATANB, 0);
+        values.put(SensorDB.COLUMN_LASTCOLLECT, 0);
         long insertId = mDb.insert(SensorDB.TABLE_SENSORS, null,
                 values);
         /*Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
@@ -79,11 +80,24 @@ public class SensorDAO {
         return lsuppr;
     }
 
+    public Sensor getSensor(String sensor_id){
+        mDb = this.getDb();
+        String Query = "Select * from " + SensorDB.TABLE_SENSORS + " where " + SensorDB.COLUMN_SENSOR_ID
+                + " = '" + sensor_id + "'";
+        Cursor cursor = mDb.rawQuery(Query, null);
+
+        cursor.moveToFirst();
+        Sensor sensor = cursorToComment(cursor);
+        cursor.close();
+
+        return sensor;
+    }
+
     public List<Sensor> getAllSensors() {
         List<Sensor> sensors = new ArrayList<Sensor>();
 
         Cursor cursor = mDb.query(SensorDB.TABLE_SENSORS,
-                allColumns, null, null, null, null, null);
+                SensorDB.allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -104,11 +118,14 @@ public class SensorDAO {
         sensor.setLatitude(cursor.getDouble(3));
         sensor.setLongitude(cursor.getDouble(4));
         sensor.setDepth(cursor.getDouble(5));
+        sensor.setFrequency(cursor.getDouble(6));
+        sensor.setDataNb(cursor.getInt(7));
+        sensor.setLastCollect(cursor.getDouble(8));
         return sensor;
     }
 
     public boolean exists(Sensor sensor) {
-        SQLiteDatabase mDb = this.getDb();
+        mDb = this.getDb();
         String Query = "Select * from " + SensorDB.TABLE_SENSORS + " where " + SensorDB.COLUMN_SENSOR_ID
                 + " = '" + sensor.getId() + "'";
         Cursor cursor = mDb.rawQuery(Query, null);

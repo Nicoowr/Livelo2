@@ -1,6 +1,7 @@
 package ch.livelo.livelo2.MySensors;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
@@ -30,6 +32,7 @@ import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.DB.SensorDB;
 import ch.livelo.livelo2.R;
+import ch.livelo.livelo2.SensorInfoActivity;
 
 /**
  * Created by Nico on 27/10/2017.
@@ -70,10 +73,22 @@ public class MySensors extends AppCompatActivity {
      //   to = new int[]{android.R.id.text2,android.R.id.text1};//int array of views id's
 
         sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
-
         sensorsView.setAdapter(sensorAdapter);
 
+        sensorsView.setOnItemClickListener(listener);
+
     }
+
+    protected AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(MySensors.this, SensorInfoActivity.class);
+            Sensor sensor = (Sensor) parent.getItemAtPosition(position);
+
+            intent.putExtra("id",sensor.getId());
+            startActivity(intent);
+        }
+    };
 
     @Override
     protected void onResume() {

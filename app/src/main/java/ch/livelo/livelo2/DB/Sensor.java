@@ -1,5 +1,8 @@
 package ch.livelo.livelo2.DB;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Nico on 27/10/2017.
  * TODO fonction check valid input pour vérifier avant d'enregistrer
@@ -7,12 +10,15 @@ package ch.livelo.livelo2.DB;
 
 public class Sensor {
 
+
     private String name = null;
     private String sensor_id = null;
     private double latitude = 0;
     private double longitude = 0;
     private double depth = 0;
-    private Data data = null;
+    private double frequency = 0;
+    private long dataNb = 0;
+    private double lastCollect = 0;
 
     //////////////////////Constructors///////////////////
     public Sensor(){
@@ -63,6 +69,18 @@ public class Sensor {
         this.depth = depth;
     }
 
+    public void setFrequency(double frequency){
+        this.frequency = frequency;
+    }
+
+    public void setDataNb(long dataNb){
+        this.dataNb = dataNb;
+    }
+
+    public void setLastCollect(double lastCollect){
+        this.lastCollect = lastCollect;
+    }
+
     public String getName(){
         return this.name;
     }
@@ -80,6 +98,38 @@ public class Sensor {
         double[] position = {this.latitude, this.longitude};
         return position;
     }
+
+    public double getFrequency(){
+        return this.frequency;
+    }
+
+    public long getDataNb(){
+        return this.dataNb;
+    }
+
+    public double getLastCollect(){
+        return this.lastCollect;
+    }
+
+    public String[] getArrayInfo(){
+        return new String[]{this.name, this.sensor_id, String.valueOf(this.latitude), String.valueOf(this.longitude),
+                String.valueOf(this.depth), String.valueOf(this.frequency), String.valueOf(this.dataNb),
+                String.valueOf(this.lastCollect)};
+    }
+
+    public List<String[]> getInfo(){
+        List<String[]> infoList = new ArrayList<String[]>();
+        String[] infoArray = this.getArrayInfo();
+
+        for(int i = 1; i< SensorDB.NB_OF_FIELDS; i++){
+            String[] item_couple = new String[]{SensorDB.allColumns[i], infoArray[i-1]};
+            infoList.add(item_couple);
+        }
+
+        return infoList;
+
+    }
+
 
 
 

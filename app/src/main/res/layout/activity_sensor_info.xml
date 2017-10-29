@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     tools:context="ch.livelo.livelo2.SensorInfoActivity">
 
-    <TextView
-        android:id="@+id/tv_id"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_marginTop="100dp"
-        android:text="id of the sensor here"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="41dp" />
-
     <Button
         android:id="@+id/button_edit_sensor"
         android:layout_width="wrap_content"
@@ -37,4 +28,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_edit_sensor"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/sensor_info"
+        android:layout_width="368dp"
+        android:layout_height="439dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_edit_sensor" />
+
+
 </android.support.constraint.ConstraintLayout>
