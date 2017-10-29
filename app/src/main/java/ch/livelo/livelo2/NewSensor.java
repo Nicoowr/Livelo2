@@ -104,7 +104,9 @@ public class NewSensor extends Activity {
         double depth = Double.parseDouble(depth_edit.getText().toString());
 
         Sensor sensor = new Sensor(name,sensor_id,latitude,longitude,depth);
-        if(sensorDAO.exists(sensor)) {
+        if(name.isEmpty() || sensor_id.isEmpty()){
+            Toast.makeText(NewSensor.this, "You must enter a name and a ID at least.", Toast.LENGTH_SHORT).show();
+        }else if(sensorDAO.exists(sensor)) {
             Toast.makeText(NewSensor.this, "This sensor already exists", Toast.LENGTH_SHORT).show();
             sensorDAO.close();
             NewSensor.this.finish();

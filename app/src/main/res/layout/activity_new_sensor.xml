@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:padding="2dp"
+            android:maxLines="1"
             >
         </EditText>
     </LinearLayout>
@@ -51,6 +52,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:padding="2dp"
+            android:maxLines="1"
             >
         </EditText>
 
@@ -79,6 +81,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:padding="2dp"
+            android:text="0"
+            android:inputType="numberDecimal"
             >
         </EditText>
 
@@ -107,6 +111,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:padding="2dp"
+            android:inputType="numberDecimal"
+            android:text="0"
             >
         </EditText>
 
@@ -135,6 +141,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:padding="2dp"
+            android:text="0"
+            android:inputType="numberDecimal"
             >
         </EditText>
     </LinearLayout>
