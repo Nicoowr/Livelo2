@@ -21,14 +21,14 @@ public class SensorDB extends SQLiteOpenHelper {
     public static final String COLUMN_DEPTH = "depth";
 
     //Other info
-    private static final String DATABASE_NAME = "sensors.db";
-    private static final int DATABASE_VERSION = 1;
+    protected static final String DATABASE_NAME = "sensors.db";
+    protected static final int DATABASE_VERSION = 2;
 
     //Create table
-    private static final String DATABASE_CREATE = "create table "
+    protected static final String DATABASE_CREATE = "create table "
             + TABLE_SENSORS + "(" + COLUMN_ID
-            + " integer primary key autoincrement, " + COLUMN_SENSOR_ID + " TEXT, "
-            + COLUMN_NAME + " TEXT, " + COLUMN_LATITUDE + " REAL, " + COLUMN_LONGITUDE + " REAL,"
+            + " integer primary key autoincrement, " + COLUMN_NAME + " TEXT, "
+            + COLUMN_SENSOR_ID + " TEXT, " + COLUMN_LATITUDE + " REAL, " + COLUMN_LONGITUDE + " REAL,"
             + COLUMN_DEPTH + " REAL); ";
 
     public SensorDB(Context context){

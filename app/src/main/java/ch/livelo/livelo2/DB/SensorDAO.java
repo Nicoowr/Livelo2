@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class SensorDAO {
         values.put(SensorDB.COLUMN_LATITUDE, latitude);
         values.put(SensorDB.COLUMN_LONGITUDE, longitude);
         values.put(SensorDB.COLUMN_DEPTH, depth);
-        long insertId = mDb.insert(DataDB.TABLE_SENSORS_DATA, null,
+        long insertId = mDb.insert(SensorDB.TABLE_SENSORS, null,
                 values);
         /*Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
                 allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
@@ -67,9 +68,15 @@ public class SensorDAO {
         return;
     }
 
-    public void deleteSensor(String sensor_id) {
-        mDb.delete(SensorDB.TABLE_SENSORS, SensorDB.COLUMN_SENSOR_ID + " = ?", new String[] {sensor_id});
+    public long deleteSensor(String sensor_id) {
+        long lsuppr = mDb.delete(SensorDB.TABLE_SENSORS, SensorDB.COLUMN_SENSOR_ID + " = ?", new String[]{sensor_id});
         //TODO : add a toast
+        return lsuppr;
+    }
+
+    public long deleteAll(){
+        long lsuppr = mDb.delete(SensorDB.TABLE_SENSORS, null, null);
+        return lsuppr;
     }
 
     public List<Sensor> getAllSensors() {
@@ -82,6 +89,7 @@ public class SensorDAO {
         while (!cursor.isAfterLast()) {
             Sensor sensor = cursorToComment(cursor);
             sensors.add(sensor);
+            Log.d("Column ID", sensor.getName());
             cursor.moveToNext();
         }
 
@@ -91,11 +99,24 @@ public class SensorDAO {
 
     private Sensor cursorToComment(Cursor cursor) {
         Sensor sensor = new Sensor();
-        sensor.setId(cursor.getString(1));
-        sensor.setName(cursor.getString(2));
+        sensor.setName(cursor.getString(1));
+        sensor.setId(cursor.getString(2));
         sensor.setLatitude(cursor.getDouble(3));
         sensor.setLongitude(cursor.getDouble(4));
         sensor.setDepth(cursor.getDouble(5));
         return sensor;
+    }
+
+    public boolean exists(Sensor sensor) {
+        SQLiteDatabase mDb = this.getDb();
+        String Query = "Select * from " + SensorDB.TABLE_SENSORS + " where " + SensorDB.COLUMN_SENSOR_ID
+                + " = '" + sensor.getId() + "'";
+        Cursor cursor = mDb.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 }

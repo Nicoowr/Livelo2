@@ -26,6 +26,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import ch.livelo.livelo2.MySensors.MySensors;
+
 public class CurrentSensor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -86,9 +88,12 @@ public class CurrentSensor extends AppCompatActivity
         layout_wait.setVisibility(View.VISIBLE);
     }
     public void goToNew(View view) {
-        action = Action.NEW;
-        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
-        layout_wait.setVisibility(View.VISIBLE);
+        //action = Action.NEW;
+        //if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        //layout_wait.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(CurrentSensor.this, NewSensor.class);
+        startActivity(intent);
+
     }
 
 
@@ -203,8 +208,8 @@ public class CurrentSensor extends AppCompatActivity
                 startActivity(intent);
                 break;
             case R.id.nav_my_sensors:
-                //intent = new Intent(CurrentSensor.this, MySensors.class);
-                //startActivity(intent);
+                intent = new Intent(CurrentSensor.this, MySensors.class);
+                startActivity(intent);
                 break;
             case R.id.nav_sensors_map:
                 intent = new Intent(CurrentSensor.this, SensorsMapsActivity.class);

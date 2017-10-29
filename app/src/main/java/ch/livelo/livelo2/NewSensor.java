@@ -17,7 +17,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -59,6 +61,8 @@ public class NewSensor extends Activity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_sensor);
+       // if(getIntent().getBooleanExtra("new", false)) fillFields(getIntent().getStringExtra("id"));
+
 
         sensorDAO = new SensorDAO(NewSensor.this);
         sensorDAO.open();
@@ -69,7 +73,7 @@ public class NewSensor extends Activity {
         longitude_edit = (EditText) findViewById(R.id.sensor_longitude);
         depth_edit = (EditText) findViewById(R.id.sensor_depth);
 
-        sensor_id_edit.setText(getIntent().getStringExtra("id"));
+        //sensor_id_edit.setText(getIntent().getStringExtra("id"));
 
         save = (Button) findViewById(R.id.save_sensor);
         save.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +83,7 @@ public class NewSensor extends Activity {
             }
         });
 
-        if(getIntent().getBooleanExtra("new", false)){
+       /* if(getIntent().getBooleanExtra("new", false)){
             // TODO récupérer les info du capteur qui existe déja
             sensor = new Sensor(getIntent().getStringExtra("id")); //
             // sensor.complete(); // fonction qui prend l'id et qui remplit les champs du sensor depuis la database, ça peut aussi etre fait dans le constructeur
@@ -87,7 +91,7 @@ public class NewSensor extends Activity {
         }
         else {
             sensor = new Sensor("my new sensor", getIntent().getStringExtra("id"));
-        }
+        }*/
     }
 
     public void saveSensor(){
@@ -99,8 +103,17 @@ public class NewSensor extends Activity {
         double longitude = Double.parseDouble(longitude_edit.getText().toString());
         double depth = Double.parseDouble(depth_edit.getText().toString());
 
-        sensorDAO.addSensor(name,sensor_id,latitude,longitude,depth);
-
+        Sensor sensor = new Sensor(name,sensor_id,latitude,longitude,depth);
+        if(sensorDAO.exists(sensor)) {
+            Toast.makeText(NewSensor.this, "This sensor already exists", Toast.LENGTH_SHORT).show();
+            sensorDAO.close();
+            NewSensor.this.finish();
+        }else {
+            sensorDAO.addSensor(name, sensor_id, latitude, longitude, depth);
+            Toast.makeText(NewSensor.this, "Sensor saved, with id= " + sensor_id, Toast.LENGTH_SHORT).show();
+            sensorDAO.close();
+            NewSensor.this.finish();
+        }
         //close the DAO here ?
     }
 

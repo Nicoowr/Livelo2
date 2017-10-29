@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ch.livelo.livelo2">
+    package="ch.livelo.livelo2"
+    >
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -12,6 +13,7 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -30,6 +32,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".NewSensor"
+            android:label="New sensor"
+            android:parentActivityName=".CurrentSensor">
+        </activity>
+        <activity
+            android:name=".MySensors.MySensors"
+            android:label="My sensors"
+            android:parentActivityName=".CurrentSensor">
+        </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
