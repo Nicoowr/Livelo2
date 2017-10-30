@@ -1,12 +1,15 @@
 package ch.livelo.livelo2;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,8 +21,7 @@ import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
 
-// TODO ajouter un bouton modification qui remmplit automatiquement l'activité new sensor
-// TODO ajouter un bouton "view on the map"
+// TODO delete button
 
 public class SensorInfoActivity extends AppCompatActivity {
     private String id = "";
@@ -36,8 +38,7 @@ public class SensorInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor_info);
-        getSupportActionBar().setTitle("Sensor information"); // TODO mettre en string resource
-
+        getSupportActionBar().setTitle("Sensor information");
 
         id = getIntent().getStringExtra("id");
 
@@ -52,9 +53,19 @@ public class SensorInfoActivity extends AppCompatActivity {
         sensorInfoAdapter = new SensorInfoAdapter(this, android.R.layout.simple_list_item_1, sensorInfo);
         sensorInfoView.setAdapter(sensorInfoAdapter);
 
+        Button button_map = (Button)findViewById(R.id.button_map);
+        button_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SensorInfoActivity.this, SensorsMapsActivity.class);
+                intent.putExtra("id", sensor.getId());
+                startActivity(intent);
+            }
+        });
 
 
-       // TextView tv_id = (TextView) findViewById(R.id.tv_id);
+
+        // TextView tv_id = (TextView) findViewById(R.id.tv_id);
        // tv_id.setText(id);
     }
 
@@ -65,17 +76,27 @@ public class SensorInfoActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToMap(View view) {
+    public void goToDelete(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete this item?");
+        builder.setMessage("Are you sure?");
 
-        //LatLng pos = new LatLng(sensor.getLat(), sensor.getLng());
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                sensorDAO.deleteSensor(sensor.getId());
+                SensorInfoActivity.this.finish();
+            }
+        });
 
-        Intent intent = new Intent(SensorInfoActivity.this, SensorsMapsActivity.class);
-        //intent.putExtra("lat", sensor.getLat());
-        //intent.putExtra("lng", sensor.getLng());
-        intent.putExtra("lat", 46.519606d);
-        intent.putExtra("lng", 6.565030d);
-        startActivity(intent);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
-
-
 }

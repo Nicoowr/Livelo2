@@ -69,6 +69,27 @@ public class SensorDAO {
         return;
     }
 
+    public void addSensor(Sensor sensor) {
+        ContentValues values = new ContentValues();
+        values.put(SensorDB.COLUMN_NAME, sensor.getName());
+        values.put(SensorDB.COLUMN_SENSOR_ID, sensor.getId());
+        values.put(SensorDB.COLUMN_LATITUDE, sensor.getLatitude());
+        values.put(SensorDB.COLUMN_LONGITUDE, sensor.getLongitude());
+        values.put(SensorDB.COLUMN_DEPTH, sensor.getDepth());
+        values.put(SensorDB.COLUMN_FREQUENCY, 0);
+        values.put(SensorDB.COLUMN_DATANB, 0);
+        values.put(SensorDB.COLUMN_LASTCOLLECT, 0);
+        long insertId = mDb.insert(SensorDB.TABLE_SENSORS, null,
+                values);
+        /*Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
+                allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
+                null, null, null);
+        cursor.moveToFirst();
+        Comment newComment = cursorToComment(cursor);
+        cursor.close();*/
+        return;
+    }
+
     public long deleteSensor(String sensor_id) {
         long lsuppr = mDb.delete(SensorDB.TABLE_SENSORS, SensorDB.COLUMN_SENSOR_ID + " = ?", new String[]{sensor_id});
         //TODO : add a toast

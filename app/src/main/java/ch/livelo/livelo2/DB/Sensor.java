@@ -93,7 +93,14 @@ public class Sensor {
         return this.depth;
     }
 
-    // je crois que Ca marche pas ça, ça va renvoyer le pointeur mais pas le tableau, c'est dangereux
+    public double getLatitude(){
+        return this.latitude;
+    }
+
+    public double getLongitude(){
+        return this.longitude;
+    }
+
     public double[] getPosition(){
         double[] position = {this.latitude, this.longitude};
         return position;

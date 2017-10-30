@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -15,21 +16,32 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import ch.livelo.livelo2.DB.Sensor;
+import ch.livelo.livelo2.DB.SensorDAO;
+
 public class SensorsMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient = null;
+    private String id;
+    private Sensor sensor;
+    private SensorDAO sensorDAO;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // FIXME peut etre un probleme d'API key
         setContentView(R.layout.activity_sensors_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        id = getIntent().getStringExtra("id");
+        sensorDAO = new SensorDAO(SensorsMapsActivity.this);
+        sensorDAO.open();
+        sensor = sensorDAO.getSensor(id);
 
     }
 
@@ -49,9 +61,8 @@ public class SensorsMapsActivity extends FragmentActivity implements OnMapReadyC
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        Intent intent = getIntent();
-        LatLng pos = new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lng", 0));
-        mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
+        LatLng pos = new LatLng(sensor.getLatitude(), sensor.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(pos).title(sensor.getName()));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10));
     }

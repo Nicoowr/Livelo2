@@ -151,9 +151,18 @@
         android:id="@+id/save_sensor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sensor_depth_row"
+        android:layout_below="@+id/button_pick_place"
         android:layout_centerHorizontal="true"
+        android:padding="5dp"
         android:text="@string/save_new_sensor"
-        android:theme="@style/Font"
-        android:padding="5dp"/>
+        android:theme="@style/Font" />
+
+    <Button
+        android:id="@+id/button_pick_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sensor_depth_row"
+        android:layout_centerHorizontal="true"
+        android:onClick="pickPlace"
+        android:text="Pick a place" />
 </RelativeLayout>
