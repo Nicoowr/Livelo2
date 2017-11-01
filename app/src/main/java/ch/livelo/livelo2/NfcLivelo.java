@@ -7,6 +7,8 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcV;
+import android.os.Build;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 

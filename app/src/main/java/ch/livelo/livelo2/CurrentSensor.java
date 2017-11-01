@@ -8,7 +8,9 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcV;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -29,7 +31,10 @@ import android.widget.Toast;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
-
+/**
+ * TODO regarder si nfc dispo, et rediriger vers la page de settings nfc
+ * TODO mettre toute l'app en portrait
+ */
 public class CurrentSensor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -75,27 +80,20 @@ public class CurrentSensor extends AppCompatActivity
 
     public void goToInfo(View view) {
         action = Action.INFO;
-        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
-        layout_wait.setVisibility(View.VISIBLE);
+        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
     public void goToCollect(View view) {
         action = Action.COLLECT;
-        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
-        layout_wait.setVisibility(View.VISIBLE);
+        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
     public void goToLaunch(View view) {
         // TODO dialog box to define the period
         action = Action.LAUNCH;
-        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
-        layout_wait.setVisibility(View.VISIBLE);
+        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
     public void goToNew(View view) {
         action = Action.NEW;
-        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
-        layout_wait.setVisibility(View.VISIBLE);
-        //Intent intent = new Intent(CurrentSensor.this, NewSensor.class);
-        //startActivity(intent);
-
+        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
 
 
@@ -170,6 +168,27 @@ public class CurrentSensor extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    private boolean enableNfc(){
+        if (myNfcAdapter == null){
+            Toast.makeText(getBaseContext(), "NFC is not available on this device",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!myNfcAdapter.isEnabled()) {
+            Toast.makeText(getBaseContext(), "You should turn NFC on before",Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                Intent intent = new Intent(Settings.ACTION_NFC_SETTINGS);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                startActivity(intent);
+            }
+            return false;
+        }
+        if (myNfcAdapter != null) myNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters,
+                mTechLists);
+        return true;
     }
 
     @Override
