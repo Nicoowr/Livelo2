@@ -32,8 +32,7 @@ import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
 /**
- * TODO regarder si nfc dispo, et rediriger vers la page de settings nfc
- * TODO mettre toute l'app en portrait
+ * TODO
  */
 public class CurrentSensor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

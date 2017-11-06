@@ -37,6 +37,7 @@
         <activity
             android:name=".CurrentSensor"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,30 +48,36 @@
         <activity
             android:name=".NewSensor"
             android:label="New sensor"
+            android:screenOrientation="portrait"
             android:parentActivityName=".CurrentSensor">
         </activity>
         <activity
             android:name=".MySensors.MySensors"
             android:label="My sensors"
+            android:screenOrientation="portrait"
             android:parentActivityName=".CurrentSensor">
         </activity>
 
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"
             android:parentActivityName=".CurrentSensor" />
         <activity
             android:name=".HelpActivity"
             android:label="@string/title_activity_help"
+            android:screenOrientation="portrait"
             android:parentActivityName=".CurrentSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SensorInfoActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".CurrentSensor" />
 
         <activity
             android:name=".SensorsMapsActivity"
             android:label="@string/title_activity_sensors_maps"
+            android:screenOrientation="portrait"
             android:parentActivityName=".CurrentSensor" ></activity>
         <service android:name=".GPS_Service"/>
     </application>

@@ -21,7 +21,11 @@ import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
 
-// TODO delete button
+/**
+ *
+ * TODO transmettre l'ID quand on appelle la map
+ *
+ */
 
 public class SensorInfoActivity extends AppCompatActivity {
     private String id = "";

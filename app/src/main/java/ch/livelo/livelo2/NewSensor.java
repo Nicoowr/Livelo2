@@ -51,6 +51,7 @@ import static java.lang.String.valueOf;
  * Created by Nico on 27/10/2017.
  * convention put extra:   String "id"
  * TODO démarer le GPS au début de cette activité
+ * TODO réparer le place picker, ne marche pas quand il y a internet
  *
  */
 

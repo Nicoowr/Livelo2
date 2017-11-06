@@ -19,6 +19,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 
+/**
+ *
+ * TODO prendre l'id, mettre la camera dessus et le selectionner si possible
+ * TODO si pas d'id, centrer sur le GPS
+ * TODO mettre un marker pour chaque capteur dans la database
+ * TODO onClick sur chaque marker (soit direct sur sensor info soit un petit menu qui propose sensor info)
+ */
+
 public class SensorsMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
