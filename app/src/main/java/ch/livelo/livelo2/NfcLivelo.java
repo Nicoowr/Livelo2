@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import ch.livelo.livelo2.DB.DataDAO;
+import ch.livelo.livelo2.DB.DataDB;
+import ch.livelo.livelo2.DB.SensorDB;
 
 /**
  * Created by Remi on 27/10/2017.
@@ -76,22 +78,26 @@ public class NfcLivelo {
         List data = new ArrayList();
         List timeStamps = new ArrayList();
 
-
+        //Harvesting data and time stamps
         for(int i = 0; i < 32000; i++){
             data.add((int) (10000*Math.random()));
         }
-
         dataCount = 32000;
         for(int i = 0; i < 32000; i++){
             timeStamps.add((now - (32000 - i)*period));
         }
 
+        //Adding all the data to the DB
         Iterator timeCursor = timeStamps.iterator();
-
         Iterator dataCursor = data.iterator();
         for(int i =0; i < 32000; i++){
             CurrentSensor.dataDAO.addData(sensor_id, (long)timeCursor.next(), (int) dataCursor.next());
         }
+
+        // TODO define an update function in SensorDAO
+
+        String updateQuery = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_DATANB + "=" + String.valueOf(dataCount)
+                + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
 
 
 

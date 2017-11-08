@@ -85,6 +85,17 @@ public class CurrentSensor extends AppCompatActivity
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
     public void goToCollect(View view) {
+        /** For testing purpose **/
+        dataDAO = new DataDAO(CurrentSensor.this);
+        dataDAO.open();
+
+        NfcLivelo.collectData();
+
+        dataDAO.close();
+        Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
+
+        /*************************/
+
         action = Action.COLLECT;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
