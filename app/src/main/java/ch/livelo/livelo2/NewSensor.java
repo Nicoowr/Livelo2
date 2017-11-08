@@ -152,7 +152,7 @@ public class NewSensor extends Activity {
         fillSensor();
         if(sensor.getName().isEmpty() || sensor.getId().isEmpty()){
             Toast.makeText(NewSensor.this, "You must enter a name and a ID at least.", Toast.LENGTH_SHORT).show();
-            // FIXME on peut mettre name sur plusieur lignes
+            // FIXME on peut mettre name sur plusieur lignes: DONE
         }else if(sensorDAO.exists(sensor)) {
             Toast.makeText(NewSensor.this, "delete existing item", Toast.LENGTH_SHORT).show();
             sensorDAO.deleteSensor(sensor.getId());

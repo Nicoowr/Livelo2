@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
@@ -45,6 +46,8 @@ public class CurrentSensor extends AppCompatActivity
     private Action action = Action.INFO;
     private int period = 0;
     private RelativeLayout layout_wait;
+
+    public static DataDAO dataDAO;//will be opened in the collectdata action
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +94,13 @@ public class CurrentSensor extends AppCompatActivity
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
     public void goToNew(View view) {
-        action = Action.NEW;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        /********************* Pour les tests, pas besoin de détecter un senseur***************/
+        //action = Action.NEW;
+        //if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, NewSensor.class);
+        startActivity(intent);
+
+
     }
 
 
@@ -113,7 +121,13 @@ public class CurrentSensor extends AppCompatActivity
                 startActivity(intent);
                 break;
             case COLLECT:
+
+                dataDAO = new DataDAO(CurrentSensor.this);
+                dataDAO.open();
+
                 NfcLivelo.collectData();
+
+                dataDAO.close();
                 Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
                 break;
             case LAUNCH:

@@ -27,7 +27,7 @@ public class DataDB extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE = "create table "
             + TABLE_SENSORS_DATA + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + COLUMN_SENSOR_ID + " TEXT, "
-            + COLUMN_TIME_STAMP + " REAL, " + COLUMN_PRESSURE + " REAL); ";
+            + COLUMN_TIME_STAMP + " Integer, " + COLUMN_PRESSURE + " Integer); ";
 
     public DataDB(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

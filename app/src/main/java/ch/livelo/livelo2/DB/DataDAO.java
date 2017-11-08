@@ -12,10 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 public class DataDAO {
 
 
-    // Si je décide de la mettre à jour, il faudra changer cet attribut
-    protected final static int VERSION = 1;
-    // Le nom du fichier qui représente ma base
-    protected final static String NOM = "sensors_data.db";
 
     protected SQLiteDatabase mDb = null;
     protected DataDB mDataDB = null;
@@ -39,7 +35,7 @@ public class DataDAO {
     }
     ///////////////////////////Operations////////////////////////
 
-    public void addData(String sensor_id, double time_stamp, double pressure) {
+    public void addData(String sensor_id, long time_stamp, int pressure) {
         ContentValues values = new ContentValues();
         values.put(DataDB.COLUMN_SENSOR_ID, sensor_id);
         values.put(DataDB.COLUMN_TIME_STAMP, time_stamp);

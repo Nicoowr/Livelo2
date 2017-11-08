@@ -1,8 +1,10 @@
 package ch.livelo.livelo2.MySensors;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -47,6 +49,8 @@ public class MySensors extends AppCompatActivity {
     private ArrayList<HashMap<String,String>> sensorsArrayList;
     private String[] from = null;
     private int[] to = null;
+
+    private static int SELECTION_MODE = 0;//tells if the user is selecting sensors or not
 
 
     @Override
@@ -112,31 +116,43 @@ public class MySensors extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected (MenuItem item)
     {
-        switch(item.getItemId())
-        {
+        switch(item.getItemId()) {
             case R.id.select_sensors:
-                sensorsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                sensorAdapter = new SensorAdapter(this, android.R.layout.simple_list_item_multiple_choice,sensorList){
-                  @Override
-                  public View getView(int position, View convertView, ViewGroup parent) {
+                if (SELECTION_MODE == 0) {
+                    sensorsView.setOnItemClickListener(null);
+                    sensorsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                    sensorAdapter = new SensorAdapter(this, android.R.layout.simple_list_item_multiple_choice, sensorList) {
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent) {
 
-                      Sensor sensor = getItem(position);
+                            Sensor sensor = getItem(position);
 
-                      if (convertView == null) {
-                          convertView = LayoutInflater.from(this.getContext())
-                                  .inflate(R.layout.sensor_short_layout_multiple_choice, parent, false);
-                      }
+                            if (convertView == null) {
+                                convertView = LayoutInflater.from(this.getContext())
+                                        .inflate(R.layout.sensor_short_layout_multiple_choice, parent, false);
+                            }
 
-                      CheckedTextView name = (CheckedTextView) convertView.findViewById(R.id.mysensor_name);
-                      name.setText(sensor.getName());
-                      TextView coord = (TextView) convertView.findViewById(R.id.myposition);
-                      coord.setText("Latitude: " + sensor.getPosition()[0] + " Longitude: " + sensor.getPosition()[1]);
+                            CheckedTextView name = (CheckedTextView) convertView.findViewById(R.id.mysensor_name);
+                            name.setText(sensor.getName());
+                            TextView coord = (TextView) convertView.findViewById(R.id.myposition);
+                            coord.setText("Latitude: " + sensor.getPosition()[0] + " Longitude: " + sensor.getPosition()[1]);
 
-                      return convertView;
-                  }
-                };
-                sensorsView.setAdapter(sensorAdapter);
-                return true;
+                            return convertView;
+                        }
+                    };
+                    sensorsView.setAdapter(sensorAdapter);
+                    SELECTION_MODE = 1;
+                    return true;
+                } else {
+                    sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
+                    sensorsView.setAdapter(sensorAdapter);
+
+                    sensorsView.setOnItemClickListener(listener);
+                    SELECTION_MODE = 0;
+                    return true;
+                }
+
+
 
             case R.id.delete_sensors:
                 SparseBooleanArray sparseBooleanArray = sensorsView.getCheckedItemPositions();
@@ -149,19 +165,51 @@ public class MySensors extends AppCompatActivity {
                     }
                 }
 
-                sensorAdapter.notifyDataSetChanged();
+                //sensorAdapter.notifyDataSetChanged();
+                sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
+                sensorsView.setAdapter(sensorAdapter);
+
+                sensorsView.setOnItemClickListener(listener);
+                SELECTION_MODE = 0;
 
                 Toast.makeText(MySensors.this, lsuppr +" sensors were deleted.", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.delete_all:
-                long lsuppr2 = 0;
-                lsuppr2 = sensorDAO.deleteAll();
-                sensorList.clear();
-                sensorAdapter.notifyDataSetChanged();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Delete this item?");
+                builder.setMessage("Are you sure?");
 
-                Toast.makeText(MySensors.this, lsuppr2 +" sensors were deleted.", Toast.LENGTH_SHORT).show();
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        long lsuppr2 = 0;
+                        lsuppr2 = sensorDAO.deleteAll();
+                        sensorList.clear();
+                        //sensorAdapter.notifyDataSetChanged();
+                        sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
+                        sensorsView.setAdapter(sensorAdapter);
+
+                        sensorsView.setOnItemClickListener(listener);
+                        SELECTION_MODE = 0;
+
+                        Toast.makeText(MySensors.this, lsuppr2 +" sensors were deleted.", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
                 return true;
+
+
+
 
         }
         return super.onOptionsItemSelected(item);
