@@ -1,7 +1,10 @@
 package ch.livelo.livelo2.DB;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Created by Nico on 27/10/2017.
@@ -18,7 +21,7 @@ public class Sensor {
     private double depth = 0;
     private double frequency = 0;
     private long dataNb = 0;
-    private double lastCollect = 0;
+    private long lastCollect = 0;
 
     //////////////////////Constructors///////////////////
     public Sensor(){
@@ -77,7 +80,7 @@ public class Sensor {
         this.dataNb = dataNb;
     }
 
-    public void setLastCollect(double lastCollect){
+    public void setLastCollect(long lastCollect){
         this.lastCollect = lastCollect;
     }
 
@@ -119,9 +122,13 @@ public class Sensor {
     }
 
     public String[] getArrayInfo(){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date toDate = new Date(this.lastCollect);
+        String lastCollectDate = df.format(toDate);
+
         return new String[]{this.name, this.sensor_id, String.valueOf(this.latitude), String.valueOf(this.longitude),
                 String.valueOf(this.depth), String.valueOf(this.frequency), String.valueOf(this.dataNb),
-                String.valueOf(this.lastCollect)};
+                String.valueOf(lastCollectDate)};
     }
 
     public List<String[]> getInfo(){

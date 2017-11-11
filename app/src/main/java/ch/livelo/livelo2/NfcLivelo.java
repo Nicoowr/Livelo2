@@ -1,6 +1,7 @@
 package ch.livelo.livelo2;
 
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
@@ -9,6 +10,7 @@ import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcV;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -69,37 +71,38 @@ public class NfcLivelo {
            //Assume the sensor exists
 
 
-        long now = System.currentTimeMillis()/1000; //current time in seconds from 1970
+        long now = System.currentTimeMillis(); //current time in milliseconds from 1970
 
         /*** Generating random data ****/
         String sensor_id = "e01";
-        int period = 15*60;//15 minutes in seconds
+        int period = 15*60*1000;//15 minutes in milliseconds
         int dataCount = 0;//initialize data counter
         List data = new ArrayList();
         List timeStamps = new ArrayList();
 
         //Harvesting data and time stamps
-        for(int i = 0; i < 32000; i++){
+        for(int i = 0; i < 500; i++){
             data.add((int) (10000*Math.random()));
+            Log.i("data iteration " + i,"data added to the list");
         }
-        dataCount = 32000;
-        for(int i = 0; i < 32000; i++){
-            timeStamps.add((now - (32000 - i)*period));
+        dataCount = 500;
+        for(int i = 0; i < dataCount; i++){
+            timeStamps.add((now - (dataCount - i)*period));
+            Log.i("data iteration " + i,"timestamp added to the list");
         }
 
         //Adding all the data to the DB
         Iterator timeCursor = timeStamps.iterator();
         Iterator dataCursor = data.iterator();
-        for(int i =0; i < 32000; i++){
+        for(int i =0; i < dataCount; i++){
             CurrentSensor.dataDAO.addData(sensor_id, (long)timeCursor.next(), (int) dataCursor.next());
+            Log.i("data iteration " + i,"data added to the db");
         }
 
-        // TODO define an update function in SensorDAO
+        //Update sensor info
+        CurrentSensor.sensorDAO.updateSensor(sensor_id,0, 0 ,0, 0, dataCount,now);
 
-        String updateQuery = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_DATANB + "=" + String.valueOf(dataCount)
-                + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
-
-
+        //TODO: append the data !
 
 
         return 0;

@@ -48,6 +48,7 @@ public class CurrentSensor extends AppCompatActivity
     private RelativeLayout layout_wait;
 
     public static DataDAO dataDAO;//will be opened in the collectdata action
+    public static SensorDAO sensorDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +89,13 @@ public class CurrentSensor extends AppCompatActivity
         /** For testing purpose **/
         dataDAO = new DataDAO(CurrentSensor.this);
         dataDAO.open();
+        sensorDAO = new SensorDAO(CurrentSensor.this);
+        sensorDAO.open();
 
         NfcLivelo.collectData();
 
         dataDAO.close();
+        sensorDAO.close();
         Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
 
         /*************************/
@@ -135,9 +139,9 @@ public class CurrentSensor extends AppCompatActivity
 
                 dataDAO = new DataDAO(CurrentSensor.this);
                 dataDAO.open();
-
+                dataDAO.transactionBegins();
                 NfcLivelo.collectData();
-
+                dataDAO.transactionEnds();
                 dataDAO.close();
                 Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
                 break;

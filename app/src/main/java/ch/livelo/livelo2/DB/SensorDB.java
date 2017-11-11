@@ -15,8 +15,8 @@ public class SensorDB extends SQLiteOpenHelper {
     public static int NB_OF_FIELDS = 9;
     public static final String TABLE_SENSORS = "sensors";
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_SENSOR_ID = "sensor_id";
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_SENSOR_ID = "sensor_id";
     public static final String COLUMN_LATITUDE = "latitude";
     public static final String COLUMN_LONGITUDE = "longitude";
     public static final String COLUMN_DEPTH = "depth";

@@ -158,6 +158,7 @@ public class NewSensor extends Activity {
             sensorDAO.deleteSensor(sensor.getId());
         }
 
+
         sensorDAO.addSensor(sensor);
         Toast.makeText(NewSensor.this, "Sensor saved, with id= " + sensor.getId(), Toast.LENGTH_SHORT).show();
         sensorDAO.close();
