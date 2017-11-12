@@ -48,7 +48,6 @@ public class CurrentSensor extends AppCompatActivity
     private int period = 0;
     private RelativeLayout layout_wait;
 
-    public static DataDAO dataDAO;//will be opened in the collectdata action
     public static SensorDAO sensorDAO;
 
     @Override
@@ -88,16 +87,11 @@ public class CurrentSensor extends AppCompatActivity
     }
     public void goToCollect(View view) {
         /** For testing purpose **/
-        dataDAO = new DataDAO(CurrentSensor.this);
-        dataDAO.open();
-        sensorDAO = new SensorDAO(CurrentSensor.this);
-        sensorDAO.open();
 
-        NfcLivelo.collectData();
 
-        dataDAO.close();
-        sensorDAO.close();
-        Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
+
+        NfcLivelo.collectData(CurrentSensor.this);
+
 
         /*************************/
 
@@ -186,13 +180,10 @@ public class CurrentSensor extends AppCompatActivity
                 break;
             case COLLECT:
 
-                dataDAO = new DataDAO(CurrentSensor.this);
-                dataDAO.open();
-                dataDAO.transactionBegins();
-                NfcLivelo.collectData();
-                dataDAO.transactionEnds();
-                dataDAO.close();
-                Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();
+
+                NfcLivelo.collectData(CurrentSensor.this);
+
+                Toast.makeText(getBaseContext(), "Data collected", Toast.LENGTH_SHORT).show();
                 break;
             case LAUNCH:
                 if (NfcLivelo.launchSampling(period)) Toast.makeText(getBaseContext(), "empty function", Toast.LENGTH_SHORT).show();

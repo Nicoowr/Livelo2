@@ -12,11 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
@@ -32,6 +34,7 @@ public class SensorInfoActivity extends AppCompatActivity {
     private Sensor sensor;
 
     private SensorDAO sensorDAO;
+    private DataDAO dataDAO;
     private SQLiteDatabase mDb;
 
     private ListView sensorInfoView;
@@ -49,6 +52,10 @@ public class SensorInfoActivity extends AppCompatActivity {
         sensorInfoView = (ListView) findViewById(R.id.sensor_info);
         sensorDAO = new SensorDAO(SensorInfoActivity.this);
         sensorDAO.open();
+
+        dataDAO = new DataDAO(SensorInfoActivity.this);
+        dataDAO.open();
+
         mDb = sensorDAO.getDb();
 
         sensor = sensorDAO.getSensor(id);
@@ -90,6 +97,33 @@ public class SensorInfoActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 sensorDAO.deleteSensor(sensor.getId());
+                dataDAO.deleteSensorData(sensor.getId());
+                SensorInfoActivity.this.finish();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void goToDeleteData(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete this sensor's data?");
+        builder.setMessage("Are you sure?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                long deletedData = dataDAO.deleteSensorData(sensor.getId());
+                sensorDAO.updateSensor(sensor.getId(),-1, -1, -1 ,-1 , 0, -1);
+                Toast.makeText(SensorInfoActivity.this,"" + deletedData + " erased from sensor " + sensor.getName(), Toast.LENGTH_SHORT).show();
                 SensorInfoActivity.this.finish();
             }
         });

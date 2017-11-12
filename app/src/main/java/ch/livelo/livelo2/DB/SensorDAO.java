@@ -86,20 +86,22 @@ public class SensorDAO {
     }
 
     public void updateSensor(String sensor_id, double latitude, double longitude, double depth, double frequency, long dataNb, long lastCollect){
-
+        //-1 means no change
         Sensor sensor = this.getSensor(sensor_id);
         ContentValues cv = new ContentValues();
-        if(latitude != 0)
+        if(latitude != -1)
             cv.put(SensorDB.COLUMN_LATITUDE, latitude);
-        if(longitude != 0)
+        if(longitude != -1)
             cv.put(SensorDB.COLUMN_LONGITUDE, longitude);
-        if(depth != 0)
+        if(depth != -1)
             cv.put(SensorDB.COLUMN_DEPTH, depth);
-        if(frequency != 0)
+        if(frequency != -1)
             cv.put(SensorDB.COLUMN_FREQUENCY,frequency);
-        if(dataNb != 0)
-            cv.put(SensorDB.COLUMN_DATANB,dataNb + sensor.getDataNb()); //These Fields should be your String values of actual column names
-        if(lastCollect != 0)
+        if(dataNb != -1)
+            cv.put(SensorDB.COLUMN_DATANB,dataNb + sensor.getDataNb());
+        if(dataNb == 0)
+            cv.put(SensorDB.COLUMN_DATANB,dataNb);//Case where you reinitialize
+        if(lastCollect != -1)
             cv.put(SensorDB.COLUMN_LASTCOLLECT,lastCollect);
 
         mDb.update(SensorDB.TABLE_SENSORS, cv, SensorDB.COLUMN_SENSOR_ID + "='"+sensor_id + "'", null);

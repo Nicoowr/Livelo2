@@ -108,8 +108,9 @@ public class DataDAO {
         return;
     }
 
-    public void deleteSensorData(String sensor_id) {
-        mDb.delete(DataDB.TABLE_SENSORS_DATA, DataDB.COLUMN_SENSOR_ID + " = ?", new String[] {sensor_id});
+    public long deleteSensorData(String sensor_id) {
+       long lsuppr =  mDb.delete(DataDB.TABLE_SENSORS_DATA, DataDB.COLUMN_SENSOR_ID + " = ?", new String[] {sensor_id});
         //TODO : add a toast
+        return lsuppr;
     }
 }
