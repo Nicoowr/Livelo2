@@ -137,4 +137,10 @@ public class SensorInfoActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    public void goToViewData(View view){
+        Intent intent = new Intent(SensorInfoActivity.this, DataViewActivity.class);
+        intent.putExtra("id",id);
+        startActivity(intent);
+    }
 }

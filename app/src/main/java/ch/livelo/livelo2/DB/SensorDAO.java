@@ -106,38 +106,6 @@ public class SensorDAO {
 
         mDb.update(SensorDB.TABLE_SENSORS, cv, SensorDB.COLUMN_SENSOR_ID + "='"+sensor_id + "'", null);
 
-        /*Sensor sensor = this.getSensor(sensor_id);
-        if(latitude != sensor.getLatitude() || latitude != 0) {
-            String updateLatitude = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_LATITUDE + "=" + String.valueOf(latitude)
-                    + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
-            mDb.rawQuery(updateLatitude,null);
-        }
-        if(longitude != sensor.getLongitude() || longitude != 0) {
-            String updateLongitude = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_LONGITUDE + "=" + String.valueOf(longitude)
-                    + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
-            mDb.rawQuery(updateLongitude,null);
-        }
-        if(depth != sensor.getDepth() || depth != 0) {
-            String updateDepth = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_DEPTH + "=" + String.valueOf(depth)
-                    + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
-            mDb.rawQuery(updateDepth, null);
-        }
-        if(frequency != sensor.getFrequency() || frequency != 0) {
-            String updateFrequency = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_FREQUENCY + "=" + String.valueOf(frequency)
-                    + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
-            mDb.rawQuery(updateFrequency,null);
-        }
-        if(dataNb != sensor.getDataNb() || dataNb != 0) {
-            String updateDataNb = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_DATANB + "=" + " '" + String.valueOf(dataNb + sensor.getDataNb())+ "' "
-                    + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
-            mDb.rawQuery(updateDataNb,null);
-        }
-        if(lastCollect != sensor.getLastCollect() || lastCollect != 0) {
-            String updateLastCollect = "UPDATE " + SensorDB.TABLE_SENSORS + " SET " + SensorDB.COLUMN_LASTCOLLECT + "=" + String.valueOf(lastCollect)
-                    + " WHERE " + SensorDB.COLUMN_SENSOR_ID + "='" + sensor_id + "'";
-            mDb.rawQuery(updateLastCollect,null);
-        }*/
-
     }
 
     public long deleteSensor(String sensor_id) {

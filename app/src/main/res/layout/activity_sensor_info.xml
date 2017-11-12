@@ -30,32 +30,50 @@
     <ListView
         android:id="@+id/sensor_info"
         android:layout_width="368dp"
-        android:layout_height="439dp"
+        android:layout_height="380dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_edit_sensor" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="goToDelete"
         android:text="Delete"
         app:layout_constraintEnd_toStartOf="@+id/button_edit_sensor"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_delete_Data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Delete data"
         android:onClick="goToDeleteData"
-        app:layout_constraintEnd_toStartOf="@+id/button_delete"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Delete data"
+        app:layout_constraintBottom_toTopOf="@+id/sensor_info"
+        app:layout_constraintEnd_toStartOf="@+id/button_view_data"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_delete" />
+
+    <Button
+        android:id="@+id/button_view_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="View data"
+        android:onClick="goToViewData"
+        app:layout_constraintBottom_toTopOf="@+id/sensor_info"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

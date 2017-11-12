@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.DatabaseUtils.InsertHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nico on 27/10/2017.
@@ -89,23 +94,43 @@ public class DataDAO {
             }catch(Exception e) {
             e.printStackTrace();
         }
-
-
-
-
-        /*ContentValues values = new ContentValues();
-        values.put(DataDB.COLUMN_SENSOR_ID, sensor_id);
-        values.put(DataDB.COLUMN_TIME_STAMP, time_stamp);
-        values.put(DataDB.COLUMN_PRESSURE, pressure);
-        long insertId = mDb.insert(DataDB.TABLE_SENSORS_DATA, null,
-                values);*/
-        /*Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
-                allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
-                null, null, null);
-        cursor.moveToFirst();
-        Comment newComment = cursorToComment(cursor);
-        cursor.close();*/
         return;
+    }
+
+    public List<Long> getSensorData(String sensor_id){
+        List<Long> data = new ArrayList();
+
+        mDb = this.getDb();
+        String Query = "Select * from " + DataDB.TABLE_SENSORS_DATA + " where " + SensorDB.COLUMN_SENSOR_ID
+                + " = '" + sensor_id + "'";
+        Cursor cursor = mDb.rawQuery(Query, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Long pressure = cursor.getLong(3);
+            data.add(pressure);
+            cursor.moveToNext();
+        }
+
+        return data;
+    }
+
+    public List<Long> getSensorTimestamp(String sensor_id){
+        List<Long> time = new ArrayList();
+
+        mDb = this.getDb();
+        String Query = "Select * from " + DataDB.TABLE_SENSORS_DATA + " where " + SensorDB.COLUMN_SENSOR_ID
+                + " = '" + sensor_id + "'";
+        Cursor cursor = mDb.rawQuery(Query, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Long timeStamp = cursor.getLong(2);
+            time.add(timeStamp);
+            cursor.moveToNext();
+        }
+
+        return time;
     }
 
     public long deleteSensorData(String sensor_id) {

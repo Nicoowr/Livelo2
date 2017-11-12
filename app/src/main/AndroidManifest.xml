@@ -75,6 +75,11 @@
             android:parentActivityName=".CurrentSensor" />
 
         <activity
+            android:name=".DataViewActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".SensorInfoActivity" />
+
+        <activity
             android:name=".SensorsMapsActivity"
             android:label="@string/title_activity_sensors_maps"
             android:screenOrientation="portrait"
