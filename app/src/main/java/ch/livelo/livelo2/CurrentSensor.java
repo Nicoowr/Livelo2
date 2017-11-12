@@ -25,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -105,8 +106,51 @@ public class CurrentSensor extends AppCompatActivity
     }
     public void goToLaunch(View view) {
         // TODO dialog box to define the period
-        action = Action.LAUNCH;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Sampling  period");
+        final EditText edit_period = new EditText(this);
+        builder.setView(edit_period);
+        edit_period.setText("15");
+
+        builder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        period = Integer.valueOf(edit_period.getText().toString());
+                        action = Action.LAUNCH;
+                        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+                        dialog.dismiss();
+
+                    }
+                });
+        builder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setNeutralButton("Default",
+                new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+//Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                edit_period.setText("15");
+            }
+        });
     }
     public void goToNew(View view) {
         /********************* Pour les tests, pas besoin de détecter un senseur***************/
@@ -127,6 +171,11 @@ public class CurrentSensor extends AppCompatActivity
         Tag detectedTag = intentNfc.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         NfcV nfcv = NfcV.get(detectedTag);
         final String id = NfcLivelo.getId(nfcv);
+        if (id.isEmpty()){
+            //Toast.makeText(getBaseContext(), "Unable to read id", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent;
 
         switch (action){

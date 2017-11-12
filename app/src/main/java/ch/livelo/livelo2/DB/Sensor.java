@@ -2,6 +2,8 @@ package ch.livelo.livelo2.DB;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -9,6 +11,12 @@ import java.util.Date;
 /**
  * Created by Nico on 27/10/2017.
  * TODO fonction check valid input pour vérifier avant d'enregistrer
+ *
+ * TODO champs period, last_start
+ *
+ * TODO boolean isRunning() pour savoir quand on collect les pressions atmosphériques et ou sur le serveur
+ *
+ * Champs boolean edited pour savoir si il faut l'envoyer sur le serveur ou pas
  */
 
 public class Sensor {
@@ -143,8 +151,5 @@ public class Sensor {
         return infoList;
 
     }
-
-
-
 
 }
