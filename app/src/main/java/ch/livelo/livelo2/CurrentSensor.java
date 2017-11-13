@@ -29,12 +29,17 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.util.List;
+
+import ch.livelo.livelo2.DB.Data;
 import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
 /**
- * TODO
+ * TODO message success post pour data et sensors
+ *
+ * http://posttestserver.com/data/2017/11/13/livelo
  */
 public class CurrentSensor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -324,8 +329,26 @@ public class CurrentSensor extends AppCompatActivity
                 startActivity(intent);
                 break;
             case R.id.nav_send:
-                //intent = new Intent(CurrentSensor.this, SettingsActivity.class);
-                //startActivity(intent);
+                //ServerLivelo.sendSensors(this);
+                //ServerLivelo.sendData();
+                SensorDAO sensorDAO = new SensorDAO(this);
+                sensorDAO.open();
+
+                List<Sensor> sensorsList = sensorDAO.getAllSensors();
+
+                for (Sensor sensor:sensorsList) {
+                    sensor.send();
+                }
+
+                //DataDAO dataDAO = new DataDAO(this);
+                //dataDAO.open();
+
+                //List<Data> dataList = dataDAO.getAllData();
+//
+                //for (Data data:dataList) {
+                //    Data.send();
+                //}
+
                 break;
         }
 

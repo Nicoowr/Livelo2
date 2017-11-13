@@ -1,5 +1,9 @@
 package ch.livelo.livelo2;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,9 +17,12 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 import ch.livelo.livelo2.DB.Data;
+import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
+import ch.livelo.livelo2.DB.SensorDAO;
 
 /**
  * Created by Remi on 11/11/2017.
@@ -50,6 +57,7 @@ public class ServerLivelo {
             e.printStackTrace();
             return false;
         }
+
         return post(postSensor.toString());
     }
 
@@ -160,4 +168,25 @@ public class ServerLivelo {
         }
         return true;
     }
+
+    public static void sendSensors(Context context) {
+        SensorDAO sensorDAO;
+        DataDAO dataDAO;
+
+        sensorDAO = new SensorDAO(context);
+        sensorDAO.open();
+        dataDAO = new DataDAO(context);
+        dataDAO.open();
+
+        List<Sensor> sensors = sensorDAO.getAllSensors();
+
+        for (Sensor sensor:sensors) {
+            postSensor(sensor);
+        }
+
+    }
+
+
+
 }
+

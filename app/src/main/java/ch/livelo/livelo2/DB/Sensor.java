@@ -1,12 +1,28 @@
 package ch.livelo.livelo2.DB;
 
+import android.os.AsyncTask;
+import android.view.View;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+
+import ch.livelo.livelo2.ServerLivelo;
 
 /**
  * Created by Nico on 27/10/2017.
@@ -151,5 +167,78 @@ public class Sensor {
         return infoList;
 
     }
+
+    public boolean send(){
+        JSONObject postSensor = new JSONObject();
+        try {
+            postSensor.put("cmd_key", "sensor");
+            // sensor info
+            postSensor.put("id", this.getId());
+            postSensor.put("depth", this.getDepth());
+            postSensor.put("lat", this.getLatitude());
+            postSensor.put("lng", this.getLongitude());
+            postSensor.put("depth", this.getDepth());
+            //postSensor.put("alt", this.getAltitude()); // or it is found on the server with altitude api
+            postSensor.put("name", this.getName());
+            //postSensor.put("run", this.isRunning());
+            //postSensor.put("period", this.getPeriod());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        new httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postSensor.toString());
+        return false;
+    }
+
+    class httpRequest extends AsyncTask<String, String, String> {
+
+        private Exception exception;
+
+        protected String doInBackground(String... string) {
+            String response = "";
+            try {
+                URL url = new URL(string[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestMethod(string[1]);
+                OutputStreamWriter request = new OutputStreamWriter(connection.getOutputStream());
+                request.write(string[2]);
+                request.flush();
+                request.close();
+
+                // get the response, maybe not necessary
+                String line = "";
+                InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                response = sb.toString();
+
+                isr.close();
+                reader.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+        @Override
+        protected void onPostExecute(String result) {}
+
+        @Override
+        protected void onPreExecute() {}
+
+        //@Override
+        //protected void onProgressUpdate(Void... values) {}
+
+    }
+
 
 }
