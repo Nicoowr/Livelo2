@@ -76,7 +76,7 @@
 
         <activity
             android:name=".DataViewActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:parentActivityName=".SensorInfoActivity" />
 
         <activity
