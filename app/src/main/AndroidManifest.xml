@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ch.livelo.livelo2"
-    >
+    package="ch.livelo.livelo2">
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -22,17 +21,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
+
 
         <activity
             android:name=".CurrentSensor"
@@ -48,43 +46,40 @@
         <activity
             android:name=".NewSensor"
             android:label="New sensor"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".CurrentSensor">
-        </activity>
+            android:parentActivityName=".CurrentSensor"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MySensors.MySensors"
             android:label="My sensors"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".CurrentSensor">
-        </activity>
-
+            android:parentActivityName=".CurrentSensor"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".CurrentSensor" />
+            android:parentActivityName=".CurrentSensor"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HelpActivity"
             android:label="@string/title_activity_help"
-            android:screenOrientation="portrait"
             android:parentActivityName=".CurrentSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SensorInfoActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".CurrentSensor" />
-
+            android:parentActivityName=".CurrentSensor"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DataViewActivity"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".SensorInfoActivity" />
-
+            android:parentActivityName=".SensorInfoActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".SensorsMapsActivity"
             android:label="@string/title_activity_sensors_maps"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".CurrentSensor" ></activity>
-        <service android:name=".GPS_Service"/>
+            android:parentActivityName=".CurrentSensor"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".GPS_Service" />
+
     </application>
 
 </manifest>

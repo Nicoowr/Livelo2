@@ -133,9 +133,27 @@ public class DataDAO {
         return time;
     }
 
+   // public List<Data> getAllData() {
+   //     List<Data> dataList = new ArrayList<Data>();
+
+   //     Cursor cursor = mDb.query(DataDB.TABLE_SENSORS_DATA,
+   //             DataDB.allColumns, null, null, null, null, null);
+
+   //     cursor.moveToFirst();
+   //     while (!cursor.isAfterLast()) {
+   //         Data data = new Data(id);
+   //         dataList.add(data);
+   //         cursor.moveToNext();
+   //     }
+
+   //     cursor.close();
+   //     return sensors;
+   // }
+
     public long deleteSensorData(String sensor_id) {
        long lsuppr =  mDb.delete(DataDB.TABLE_SENSORS_DATA, DataDB.COLUMN_SENSOR_ID + " = ?", new String[] {sensor_id});
         //TODO : add a toast
         return lsuppr;
     }
+
 }

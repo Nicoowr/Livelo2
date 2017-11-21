@@ -23,5 +23,7 @@
     //TODO clé d'API de mon compte remi.baudoux@laposte.net
 
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBveCGWC6HoxgRVRrN4nmg8Sp6H-k_5fPw</string>
+    <!--string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBveCGWC6HoxgRVRrN4nmg8Sp6H-k_5fPw</string-->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAzrTNnsmPlBJZsKmguK1coK4QME8AVcxg</string>
+
 </resources>

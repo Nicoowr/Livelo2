@@ -17,7 +17,8 @@ public class DataDB extends SQLiteOpenHelper {
     public static final String COLUMN_SENSOR_ID = "sensor_id";
     public static final String COLUMN_TIME_STAMP = "time_stamp";
     public static final String COLUMN_PRESSURE = "pressure";
-
+    public static String[] allColumns = { COLUMN_ID, COLUMN_SENSOR_ID,
+            COLUMN_TIME_STAMP, COLUMN_PRESSURE};
 
     //Other info
     private static final String DATABASE_NAME = "sensors_data.db";

@@ -8,6 +8,31 @@
     tools:context="ch.livelo.livelo2.CurrentSensor"
     tools:showIn="@layout/app_bar_current_sensor">
 
+    <RelativeLayout
+        android:id="@+id/layout_load"
+        android:layout_width="368dp"
+        android:layout_height="173dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp">
+
+        <ProgressBar
+            android:id="@+id/pb_load"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tv_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/connect_the_sensor" />
+    </RelativeLayout>
+
     <Button
         android:id="@+id/button_info"
         android:layout_width="152dp"
