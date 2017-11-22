@@ -102,7 +102,7 @@ public class NfcLivelo {
                 List timeStamps = new ArrayList();
 
                 //Harvesting data and time stamps
-                dataCount = 10;
+                dataCount = 10000;
                 for (int i = 0; i < dataCount; i++) {
                     data.add((int) (10000 * Math.random()));
                     Log.i("data iteration " + i, "data added to the list");

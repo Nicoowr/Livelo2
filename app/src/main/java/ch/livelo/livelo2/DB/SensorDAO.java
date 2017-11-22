@@ -55,12 +55,6 @@ public class SensorDAO {
         values.put(SensorDB.COLUMN_LASTCOLLECT, 0);
         long insertId = mDb.insert(SensorDB.TABLE_SENSORS, null,
                 values);
-        /*Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
-                allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
-                null, null, null);
-        cursor.moveToFirst();
-        Comment newComment = cursorToComment(cursor);
-        cursor.close();*/
         return;
     }
 
@@ -76,12 +70,6 @@ public class SensorDAO {
         values.put(SensorDB.COLUMN_LASTCOLLECT, 0);
         long insertId = mDb.insert(SensorDB.TABLE_SENSORS, null,
                 values);
-        /*Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
-                allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
-                null, null, null);
-        cursor.moveToFirst();
-        Comment newComment = cursorToComment(cursor);
-        cursor.close();*/
         return;
     }
 
@@ -150,6 +138,7 @@ public class SensorDAO {
         return sensors;
     }
 
+    /************** Returns sensor at cursor position *****************/
     private Sensor cursorToComment(Cursor cursor) {
         Sensor sensor = new Sensor();
         sensor.setName(cursor.getString(1));
@@ -163,6 +152,7 @@ public class SensorDAO {
         return sensor;
     }
 
+    /************** Check existence *****************/
     public boolean exists(Sensor sensor) {
         mDb = this.getDb();
         String Query = "Select * from " + SensorDB.TABLE_SENSORS + " where " + SensorDB.COLUMN_SENSOR_ID
