@@ -473,7 +473,8 @@ public class CurrentSensor extends AppCompatActivity
                     e.printStackTrace();
                 }
                 values.addAll(NfcLivelo.readOneBlock(nfcv));
-                publishProgress((int) ((k / (float) numberSamples) * 100));
+                //publishProgress((int) ((k / (float) nbBlocksToRead) * 100));
+                publishProgress((int) ((k / (float) 32) * 100));
                 if (isCancelled()) return null;
             }
 
