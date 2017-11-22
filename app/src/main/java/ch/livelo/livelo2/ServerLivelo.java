@@ -19,6 +19,9 @@ import ch.livelo.livelo2.DB.Sensor;
 
 /**
  * Created by Remi on 11/11/2017.
+ * Descrittion here:
+ *
+ * <a href="https://docs.google.com/document/d/1z0cgWoqcFKSJzhEZ-QeP2fDH0947Sg1Jnz9677uyO5M/edit">
  *
  * TODO tester post pour data et sensor
  */
