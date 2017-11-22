@@ -163,16 +163,17 @@ public class SensorDAO {
         return sensor;
     }
 
-    public boolean exists(Sensor sensor) {
+    public boolean exists(String id) {
         mDb = this.getDb();
         String Query = "Select * from " + SensorDB.TABLE_SENSORS + " where " + SensorDB.COLUMN_SENSOR_ID
-                + " = '" + sensor.getId() + "'";
+                + " = '" + id + "'";
         Cursor cursor = mDb.rawQuery(Query, null);
         if(cursor.getCount() <= 0){
             cursor.close();
             return false;
+        }else {
+            cursor.close();
+            return true;
         }
-        cursor.close();
-        return true;
     }
 }

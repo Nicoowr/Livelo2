@@ -25,14 +25,15 @@ import ch.livelo.livelo2.SensorInfoActivity;
  */
 
 public class Data {
-    private Sensor sensor;
+    private String sensor_id;
     private List<Long> timeStamp;
     private List<Long> values;
 
     public Data(String id, Context context) {
         SensorDAO sensorDAO = new SensorDAO(context);
         sensorDAO.open();
-        this.sensor = sensorDAO.getSensor(id);
+        //TODO : what to do when the sensor doesnt exist
+        this.sensor_id = id;
         sensorDAO.close();
 
         DataDAO dataDAO = new DataDAO(context);
@@ -47,15 +48,14 @@ public class Data {
     public Data(String id, List<Long> timeStamp, List<Long> values, Context context){
         SensorDAO sensorDAO = new SensorDAO(context);
         sensorDAO.open();
-        this.sensor = sensorDAO.getSensor(id);
+        this.sensor_id = id;
         this.timeStamp = timeStamp;
         this.values = values;
     }
 
-    public Sensor getSensor(){
-        return this.sensor;
+    public String getSensorID(){
+        return this.sensor_id;
     }
-
     public List<Long> getTimeStamp(){
         return this.timeStamp;
     }
@@ -77,7 +77,7 @@ public class Data {
         try {
             postData.put("cmd_key", "raw_pressure");
             // data info
-            postData.put("id", this.sensor.getId());
+            postData.put("id", sensor_id);
             postData.put("t", this.timeStamp);
             postData.put("val", this.values);
         } catch (JSONException e) {

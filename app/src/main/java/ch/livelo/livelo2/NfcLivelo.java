@@ -65,6 +65,7 @@ public class NfcLivelo {
                 id = nfcv.transceive(new byte[]{0x00, 0x2B});
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.d("Command transfer","Failed");
             }
         }
         for (int i = id.length - 3; i > 1; i--) {//
@@ -147,7 +148,14 @@ public class NfcLivelo {
         t.start();
     }
 
-
+    public static void requestOneBlock(NfcV nfcv) {
+        final byte readCommand[] = new byte[]{0x00, 0x21, (byte) 0, 0x01, 0x00, 0x20, 0x03, 0x01, 0x01, 0x00, 0x00};
+        try {
+            nfcv.transceive(readCommand);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static List<Long> readOneBlock(NfcV nfcv) {
         byte i = 0x44; //Start block of data
@@ -204,11 +212,9 @@ public class NfcLivelo {
         byte c[] = {0};
         int numberSamples;
         try {
-            nfcv.connect();
             c = nfcv.transceive(new byte[]{0x00, (byte) -64, 0x07, 0x41, 0x06}); //read block 641h from RAM
-            nfcv.close();
         } catch (IOException e) {
-            Toast.makeText(context, "Error8", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
         }
         int count = ((c[6] & 0xff) << 8) | (c[5] & 0xff);//Warning: order of bytes inversed!
         count = (count >> 1) - 1;
@@ -221,8 +227,22 @@ public class NfcLivelo {
         return numberSamples;
     }
 
+    public static float readSamplingFreq(NfcV nfcv) {
+        byte[] p = {0};
+        try {
+            p = nfcv.transceive(new byte[]{0x00, 0x20, 0x03}); //read block 3 from FRAM
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int period = ((p[4] & 0xff) << 24) | ((p[3] & 0xff) << 16) | ((p[2] & 0xff) << 8) | (p[1] & 0xff);//Warning: order of bytes inversed!
+        float periodInMin = (float) period / 1000; //period in minutes
+        return periodInMin;
+    }
+
     public static boolean launchSampling(int period, NfcV nfcv) {
-        int periodInMs = period * 60 * 1000; //period in ms
+        reset(nfcv);
+
+        int periodInMs = period * 1000 - 35; //period in ms //rajouter 60* // 15 is to compensate sampling time
 
         byte periodInMsB[] = new byte[4];
 
@@ -278,13 +298,16 @@ public class NfcLivelo {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if((samplingIsLaunched[3] & (byte)16)== (1 << 4))return true;
-        else return false;
+        if((samplingIsLaunched[3] & (byte)16)== (1 << 4))
+            return true;
+        else
+            return false;
 
     }
 
-    public static void requestOneBlock(NfcV nfcv) {
-        final byte readCommand[] = new byte[]{0x00, 0x21, (byte) 0, 0x01, 0x00, 0x20, 0x03, 0x01, 0x01, 0x00, 0x00};
+
+    public static void reset(NfcV nfcv) {
+        final byte readCommand[] = new byte[]{0x00, 0x21, (byte) 0, 0x01, 0x00, 0x40, 0x03, 0x01, 0x01, 0x00, 0x00};
         try {
             nfcv.transceive(readCommand);
         } catch (IOException e) {

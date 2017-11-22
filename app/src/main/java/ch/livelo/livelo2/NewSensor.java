@@ -101,7 +101,7 @@ public class NewSensor extends Activity {
 
         sensor = new Sensor(id); //
 
-        if(sensorDAO.exists(sensor)) {
+        if(sensorDAO.exists(id)) {
             sensor = sensorDAO.getSensor(id);
             fillFields();
         }
@@ -153,7 +153,7 @@ public class NewSensor extends Activity {
         if(sensor.getName().isEmpty() || sensor.getId().isEmpty()){
             Toast.makeText(NewSensor.this, "You must enter a name and a ID at least.", Toast.LENGTH_SHORT).show();
             // FIXME on peut mettre name sur plusieur lignes: DONE
-        }else if(sensorDAO.exists(sensor)) {
+        }else if(sensorDAO.exists(sensor.getId())) {
             Toast.makeText(NewSensor.this, "delete existing item", Toast.LENGTH_SHORT).show();
             sensorDAO.deleteSensor(sensor.getId());
         }

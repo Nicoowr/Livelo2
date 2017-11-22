@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -83,18 +84,39 @@ public class DataDAO {
         mDb.endTransaction();
     }
 
-    public void addData(String sensor_id, long time_stamp, int pressure) {
+    public void addData(String sensor_id, long time_stamp, long pressure) {
 
         try {
                 statement.clearBindings();
                 statement.bindString(1, sensor_id);
                 statement.bindLong(2, time_stamp);
-                statement.bindLong(3, (long) pressure);// I can't bind integer ?!
+                statement.bindLong(3, pressure);// I can't bind integer ?!
                 statement.execute();
             }catch(Exception e) {
             e.printStackTrace();
         }
         return;
+    }
+
+    public long addAllData(Data data){
+        String sensor_id = data.getSensorID();
+        List<Long> timeStamps = data.getTimeStamp();
+        List<Long> values = data.getValues();
+
+        long dataCount = (long)timeStamps.size();
+
+        //Adding all the data to the DB
+        Iterator timeCursor = timeStamps.iterator();
+        Iterator dataCursor = values.iterator();
+        for (long i = 0; i < dataCount; i++) {
+            addData(sensor_id, (long) timeCursor.next(), (long) dataCursor.next());
+            Log.i("data iteration " + i, "data added to the db");
+        }
+
+        return dataCount;
+
+
+
     }
 
     public List<Long> getSensorData(String sensor_id){
