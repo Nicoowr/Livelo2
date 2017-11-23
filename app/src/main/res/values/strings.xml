@@ -187,4 +187,5 @@
     </string>
     <string name="title_activity_sensors_maps">Map</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_sensor_maps">Map</string>
 </resources>

@@ -5,4 +5,4 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.livelo.livelo2.SensorsMapsActivity" />
+    tools:context="ch.livelo.livelo2.SensorMapsActivity" />

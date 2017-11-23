@@ -81,8 +81,6 @@ public class NewSensor extends Activity {
 
 
         String id = getIntent().getStringExtra("id");
-        sensorDAO = new SensorDAO(NewSensor.this);
-        sensorDAO.open();
 
         name_edit = (EditText) findViewById(R.id.sensor_name);
         sensor_id_edit = (EditText) findViewById(R.id.sensor_id);
@@ -101,10 +99,13 @@ public class NewSensor extends Activity {
 
         sensor = new Sensor(id); //
 
+        sensorDAO = new SensorDAO(NewSensor.this);
+        sensorDAO.open();
         if(sensorDAO.exists(id)) {
             sensor = sensorDAO.getSensor(id);
             fillFields();
         }
+        sensorDAO.close();
 
        sensor_id_edit.setText(sensor.getId());
 
@@ -150,19 +151,18 @@ public class NewSensor extends Activity {
         //Sensor sensor = new Sensor(name,id,latitude,longitude,depth);
 
         fillSensor();
+        sensorDAO.open();
         if(sensor.getName().isEmpty() || sensor.getId().isEmpty()){
             Toast.makeText(NewSensor.this, "You must enter a name and a ID at least.", Toast.LENGTH_SHORT).show();
-            // FIXME on peut mettre name sur plusieur lignes: DONE
+            return;
         }else if(sensorDAO.exists(sensor.getId())) {
-            Toast.makeText(NewSensor.this, "delete existing item", Toast.LENGTH_SHORT).show();
             sensorDAO.deleteSensor(sensor.getId());
+            Toast.makeText(NewSensor.this, "delete existing item", Toast.LENGTH_SHORT).show();
         }
 
 
         sensorDAO.addSensor(sensor);
         Toast.makeText(NewSensor.this, "Sensor saved, with id= " + sensor.getId(), Toast.LENGTH_SHORT).show();
-        sensorDAO.close();
-
         sensorDAO.close();
         NewSensor.this.finish();
     }

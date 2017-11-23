@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -61,8 +62,6 @@ public class MySensors extends AppCompatActivity {
 
         sensorsView = (ListView) findViewById(R.id.sensorsView);
         sensorDAO = new SensorDAO(MySensors.this);
-        sensorDAO.open();
-        sensorList = sensorDAO.getAllSensors();
 
      //   //Setting the adapter
      //   sensorsArrayList=new ArrayList<>();
@@ -75,12 +74,6 @@ public class MySensors extends AppCompatActivity {
      //   }
      //   from = new String[]{"name","id"};//string array
      //   to = new int[]{android.R.id.text2,android.R.id.text1};//int array of views id's
-
-        sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
-        sensorsView.setAdapter(sensorAdapter);
-
-        sensorsView.setOnItemClickListener(listener);
-
     }
 
     protected AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
@@ -97,6 +90,11 @@ public class MySensors extends AppCompatActivity {
     @Override
     protected void onResume() {
         sensorDAO.open();
+        sensorList = sensorDAO.getAllSensors();
+        sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
+        sensorsView.setAdapter(sensorAdapter);
+
+        sensorsView.setOnItemClickListener(listener);
         super.onResume();
     }
 

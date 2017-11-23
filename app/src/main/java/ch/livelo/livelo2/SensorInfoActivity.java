@@ -68,7 +68,7 @@ public class SensorInfoActivity extends AppCompatActivity {
         button_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SensorInfoActivity.this, SensorsMapsActivity.class);
+                Intent intent = new Intent(SensorInfoActivity.this, SensorMapsActivity.class);
                 intent.putExtra("id", sensor.getId());
                 startActivity(intent);
             }

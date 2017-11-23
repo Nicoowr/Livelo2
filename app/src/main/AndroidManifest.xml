@@ -27,10 +27,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_maps_key" />
-
 
         <activity
             android:name=".CurrentSensor"
@@ -47,7 +43,12 @@
             android:name=".NewSensor"
             android:label="New sensor"
             android:parentActivityName=".CurrentSensor"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="com.google.android.maps.v2.API_KEY"
+                android:value="@string/google_maps_key_v2" />
+        </activity>
+
         <activity
             android:name=".MySensors.MySensors"
             android:label="My sensors"
@@ -72,14 +73,18 @@
             android:name=".DataViewActivity"
             android:parentActivityName=".SensorInfoActivity"
             android:screenOrientation="landscape" />
-        <activity
-            android:name=".SensorsMapsActivity"
-            android:label="@string/title_activity_sensors_maps"
-            android:parentActivityName=".CurrentSensor"
-            android:screenOrientation="portrait" />
 
         <service android:name=".GPS_Service" />
 
+        <activity
+            android:name=".SensorMapsActivity"
+            android:label="@string/title_activity_sensor_maps">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

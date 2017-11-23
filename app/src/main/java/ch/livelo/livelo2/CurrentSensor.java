@@ -63,8 +63,6 @@ public class CurrentSensor extends AppCompatActivity
     private int period = 0;
     private RelativeLayout layout_wait;
     private RelativeLayout layout_load;
-    private TextView tv_load;
-    private ProgressBar pb_load;
 
     public static SensorDAO sensorDAO;
 
@@ -76,8 +74,7 @@ public class CurrentSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
         layout_load = (RelativeLayout) findViewById(R.id.layout_load);
-        tv_load = (TextView) findViewById(R.id.tv_load);
-        pb_load = (ProgressBar) findViewById(R.id.pb_load);
+
         setSupportActionBar(toolbar);
 
 
@@ -117,6 +114,11 @@ public class CurrentSensor extends AppCompatActivity
     /*************************/
 
     public void goToCollect(View view) {
+        /** For testing purpose **/
+
+        layout_load.setVisibility(View.VISIBLE);
+        new LoadData().execute();
+        /*************************/
 
         action = Action.COLLECT;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
@@ -124,7 +126,7 @@ public class CurrentSensor extends AppCompatActivity
     }
 
     public void goToLaunch(View view) {
-        // TODO dialog box to define the period
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Sampling  period [s]");
         //final LinearLayout dialogLayout = new LinearLayout(this);
@@ -182,10 +184,10 @@ public class CurrentSensor extends AppCompatActivity
 
     public void goToNew(View view) {
         /********************* Pour les tests, pas besoin de détecter un senseur***************/
-        action = Action.NEW;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
-        //Intent intent = new Intent(this, NewSensor.class);
-        //startActivity(intent);
+        //action = Action.NEW;
+        //if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, NewSensor.class);
+        startActivity(intent);
 
     }
 
@@ -242,7 +244,6 @@ public class CurrentSensor extends AppCompatActivity
                 break;
 
             case LAUNCH:
-                // TODO j'ai pas essayé ce code. Ah ouais...
                 sensorDAO = new SensorDAO(this);
                 sensorDAO.open();
                 if(!sensorDAO.exists(id)) { // if does not exist, ask to edit it and store the sensor
@@ -406,15 +407,15 @@ public class CurrentSensor extends AppCompatActivity
         Intent intent;
         switch(id){
             case R.id.nav_current_sensor:
-                intent = new Intent(CurrentSensor.this, CurrentSensor.class);
-                startActivity(intent);
+                //intent = new Intent(CurrentSensor.this, CurrentSensor.class);
+                //startActivity(intent);
                 break;
             case R.id.nav_my_sensors:
                 intent = new Intent(CurrentSensor.this, MySensors.class);
                 startActivity(intent);
                 break;
             case R.id.nav_sensors_map:
-                intent = new Intent(CurrentSensor.this, SensorsMapsActivity.class);
+                intent = new Intent(CurrentSensor.this, SensorMapsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_my_data:
@@ -450,22 +451,39 @@ public class CurrentSensor extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     class LoadData extends AsyncTask<String, Integer, Data> {
         int numberSamples;
         float period;
         long now = System.currentTimeMillis(); //current time in milliseconds from 1970
-        protected void onPreExecute(){
-            numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
-            period = NfcLivelo.readSamplingFreq(nfcv);
+        private TextView tv_load;
+        private ProgressBar pb_load;
 
+        protected void onPreExecute(){
+            tv_load = (TextView) findViewById(R.id.tv_load);
+            pb_load = (ProgressBar) findViewById(R.id.pb_load);
+            pb_load.setMax(10);
+
+            //numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
+            //period = NfcLivelo.readSamplingFreq(nfcv);
         }
         protected Data doInBackground(String... strings) {
+
             List<Long> timeStamp = new ArrayList();
             List<Long> values = new ArrayList();
 
+            for (int i = 0; i<101; i++){
+                publishProgress(i);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
             // number of blocks (2048B) to read - 1, such that it only reads the nb of new samples
             //if (k < 1){//nbBlocksToRead) {
-            for(int k = 0; k<1; k++){
+            for(int k = 0; k<2; k++){
                 NfcLivelo.requestOneBlock(nfcv);
                 try {
                     Thread.sleep(100);
@@ -474,7 +492,7 @@ public class CurrentSensor extends AppCompatActivity
                 }
                 values.addAll(NfcLivelo.readOneBlock(nfcv));
                 //publishProgress((int) ((k / (float) nbBlocksToRead) * 100));
-                publishProgress((int) ((k / (float) 32) * 100));
+                publishProgress((int) ((k / (float) 2) * 100));
                 if (isCancelled()) return null;
             }
 
@@ -488,33 +506,33 @@ public class CurrentSensor extends AppCompatActivity
         }
 
         protected void onProgressUpdate(Integer... progress) {
+
             //setProgressPercent(progress[0]);
-            //pb_load.setProgress(progress[0]);
-            //tv_load.setText(progress[0]);
+            pb_load.setProgress(progress[0]);
+            tv_load.setText(progress[0]);
         }
 
         protected void onPostExecute(Data data) {
             try {
                 nfcv.close();
             } catch (IOException e) {e.printStackTrace();}
-            // TODO store data in the db
-            sensorDAO = new SensorDAO(CurrentSensor.this);
-            sensorDAO.open();
+
+            // store data in the db
             DataDAO dataDAO = new DataDAO(CurrentSensor.this);
             dataDAO.open();
             dataDAO.transactionBegins();
-
             long dataCount = dataDAO.addAllData(data);
             //TODO: so as to interpolate, we need last launch time
-            sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, numberSamples, now);
-
-
             dataDAO.transactionEnds();
             dataDAO.close();
+
+            sensorDAO = new SensorDAO(CurrentSensor.this);
+            sensorDAO.open();
+            sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, numberSamples, now);
             sensorDAO.close();
+
             Toast.makeText(getBaseContext(), "" + numberSamples + " samples collected", Toast.LENGTH_SHORT).show();
             layout_load.setVisibility(View.INVISIBLE);
-
         }
     }
 }
