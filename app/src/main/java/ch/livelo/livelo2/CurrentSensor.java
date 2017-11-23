@@ -116,8 +116,8 @@ public class CurrentSensor extends AppCompatActivity
     public void goToCollect(View view) {
         /** For testing purpose **/
 
-        layout_load.setVisibility(View.VISIBLE);
-        new LoadData().execute();
+        //layout_load.setVisibility(View.VISIBLE);
+        //new LoadData().execute();
         /*************************/
 
         action = Action.COLLECT;
@@ -184,10 +184,10 @@ public class CurrentSensor extends AppCompatActivity
 
     public void goToNew(View view) {
         /********************* Pour les tests, pas besoin de détecter un senseur***************/
-        //action = Action.NEW;
-        //if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(this, NewSensor.class);
-        startActivity(intent);
+        action = Action.NEW;
+        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        //Intent intent = new Intent(this, NewSensor.class);
+        //startActivity(intent);
 
     }
 
@@ -460,26 +460,26 @@ public class CurrentSensor extends AppCompatActivity
         private ProgressBar pb_load;
 
         protected void onPreExecute(){
-            tv_load = (TextView) findViewById(R.id.tv_load);
-            pb_load = (ProgressBar) findViewById(R.id.pb_load);
-            pb_load.setMax(10);
+            //tv_load = (TextView) findViewById(R.id.tv_load);
+            //pb_load = (ProgressBar) findViewById(R.id.pb_load);
+            //pb_load.setMax(10);
 
-            //numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
-            //period = NfcLivelo.readSamplingFreq(nfcv);
+            numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
+            period = NfcLivelo.readSamplingFreq(nfcv);
         }
         protected Data doInBackground(String... strings) {
 
             List<Long> timeStamp = new ArrayList();
             List<Long> values = new ArrayList();
 
-            for (int i = 0; i<101; i++){
-                publishProgress(i);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            //for (int i = 0; i<101; i++){
+            //    publishProgress(i);
+            //    try {
+            //        Thread.sleep(100);
+            //    } catch (InterruptedException e) {
+            //        e.printStackTrace();
+            //    }
+            //}
 
             // number of blocks (2048B) to read - 1, such that it only reads the nb of new samples
             //if (k < 1){//nbBlocksToRead) {
@@ -508,8 +508,8 @@ public class CurrentSensor extends AppCompatActivity
         protected void onProgressUpdate(Integer... progress) {
 
             //setProgressPercent(progress[0]);
-            pb_load.setProgress(progress[0]);
-            tv_load.setText(progress[0]);
+            //pb_load.setProgress(progress[0]);
+            //tv_load.setText(progress[0]);
         }
 
         protected void onPostExecute(Data data) {
