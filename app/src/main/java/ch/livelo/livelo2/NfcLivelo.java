@@ -2,6 +2,7 @@ package ch.livelo.livelo2;
 
 import android.app.Application;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -183,6 +184,7 @@ public class NfcLivelo {
             j++;
             i++;
             blockCount++;
+
         }
 
         //Second blocks
@@ -204,12 +206,33 @@ public class NfcLivelo {
             j++;
             i++;
             blockCount++;
+
         }
         return data;
     }
 
+    public static long readBlockOne(NfcV nfcv, byte i, int blockCount, byte address) {
+        byte[] buffer = {0};        // il fallait l'initialiser
+        try {
+            buffer = nfcv.transceive(new byte[]{0x00, (byte) -64, 0x07, i, address});//Read single block
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        for (int l = 0; l < buffer.length; l++) {
+            if (l % 2 == 1) {
+                Log.i(String.format("%1$d", blockCount), String.format("%8s", Integer.toBinaryString(buffer[l] & 0xFF)).replace(' ', '0'));
+                Log.i(String.format("%1$d", blockCount), String.format("%8s", Integer.toBinaryString(buffer[l + 1] & 0xFF)).replace(' ', '0'));
+                long currentData = ((((buffer[l] & 0xff) << 8) | (buffer[l + 1] & 0xff)) << 1);
+                return currentData;
+            }
+        }
+        return -1;
+    }
+
+
     public static int readNbSamples(Context context,NfcV nfcv){
-        byte c[] = {0};
+        byte c[] = {0,0,0,0,0,0,0,0};
         int numberSamples;
         try {
             c = nfcv.transceive(new byte[]{0x00, (byte) -64, 0x07, 0x41, 0x06}); //read block 641h from RAM

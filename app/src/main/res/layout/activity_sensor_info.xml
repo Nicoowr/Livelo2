@@ -58,7 +58,8 @@
         android:text="Delete data"
         app:layout_constraintBottom_toTopOf="@+id/sensor_info"
         app:layout_constraintEnd_toStartOf="@+id/button_view_data"
-        app:layout_constraintTop_toBottomOf="@+id/button_delete" />
+        app:layout_constraintTop_toBottomOf="@+id/button_delete"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button_view_data"

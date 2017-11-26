@@ -1,6 +1,10 @@
 package ch.livelo.livelo2;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,6 +19,7 @@ import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.NotificationCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -62,7 +67,8 @@ public class CurrentSensor extends AppCompatActivity
     private Action action = Action.INFO;
     private int period = 0;
     private RelativeLayout layout_wait;
-    private RelativeLayout layout_load;
+    private TextView tv_wait;
+    private ProgressDialog progressDialog;
 
     public static SensorDAO sensorDAO;
 
@@ -73,7 +79,7 @@ public class CurrentSensor extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
-        layout_load = (RelativeLayout) findViewById(R.id.layout_load);
+        tv_wait = (TextView) findViewById(R.id.tv_wait);
 
         setSupportActionBar(toolbar);
 
@@ -99,30 +105,31 @@ public class CurrentSensor extends AppCompatActivity
                 new String[]{NdefFormatable.class.getName()}};
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        myNfcAdapter.disableForegroundDispatch(this);
+        super.onPause();
+    }
+
     public void goToInfo(View view) {
+        tv_wait.setText("Connect the sensor to get information");
         action = Action.INFO;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
 
-    /** For testing purpose **/
-
-    public void goToReset(View view) {
-        action = Action.RESET;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
-    }
-
-    /*************************/
-
     public void goToCollect(View view) {
+        tv_wait.setText("Connect the sensor to collect data");
         /** For testing purpose **/
-
-        //layout_load.setVisibility(View.VISIBLE);
         //new LoadData().execute();
         /*************************/
 
         action = Action.COLLECT;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
-       // Toast.makeText(this,"Fuck you",Toast.LENGTH_SHORT);
     }
 
     public void goToLaunch(View view) {
@@ -148,6 +155,8 @@ public class CurrentSensor extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         period = Integer.valueOf(edit_period.getText().toString());
                         action = Action.LAUNCH;
+                        tv_wait.setText("Connect the sensor to start sampling every " + period + " seconds");
+
                         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
                         dialog.dismiss();
 
@@ -183,13 +192,22 @@ public class CurrentSensor extends AppCompatActivity
     }
 
     public void goToNew(View view) {
-        /********************* Pour les tests, pas besoin de détecter un senseur***************/
+        tv_wait.setText("Connect the sensor to register it");
         action = Action.NEW;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        /********************* Pour les tests, pas besoin de détecter un senseur***************/
         //Intent intent = new Intent(this, NewSensor.class);
         //startActivity(intent);
 
     }
+
+    /** For testing purpose **/
+    public void goToReset(View view) {
+        tv_wait.setText("Connect the sensor to reset it");
+        action = Action.RESET;
+        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+    }
+    /*************************/
 
     @Override
     public void onNewIntent(Intent intentNfc) {
@@ -204,37 +222,57 @@ public class CurrentSensor extends AppCompatActivity
             e.printStackTrace();
         }
         final String id = NfcLivelo.getId(nfcv);
-        //if (id.isEmpty()){
-        //    Toast.makeText(getBaseContext(), "Unable to read id", Toast.LENGTH_SHORT).show();
-        //    return;
-        //}else{
-            Toast.makeText(getBaseContext(), "id is " + id , Toast.LENGTH_SHORT).show();
-        //}
+        if (id.isEmpty()){
+            Toast.makeText(getBaseContext(), "Unable to read id", Toast.LENGTH_LONG).show();
+            return;
+        }else{
+            //Toast.makeText(getBaseContext(), "id is " + id , Toast.LENGTH_SHORT).show();
+        }
 
         Intent intent;
 
         switch (action){
-            case RESET:
-                NfcLivelo.reset(nfcv);
-                Toast.makeText(getBaseContext(), "Reset sent", Toast.LENGTH_SHORT).show();
-                try {
-                    nfcv.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-
             case INFO:
                 try {
                     nfcv.close();
                 } catch (IOException e) {e.printStackTrace();}
-                intent = new Intent(CurrentSensor.this, SensorInfoActivity.class);
-                intent.putExtra("id", id);
-                startActivity(intent);
+
+                SensorDAO sensorDAO = new SensorDAO(CurrentSensor.this);
+                sensorDAO.open();
+
+                if(!sensorDAO.exists(id)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("This sensor is not in your data base");
+                    builder.setMessage("Do you want to configure a new one?");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Intent intent = new Intent(CurrentSensor.this, NewSensor.class);
+                            intent.putExtra("id", id);
+                            startActivity(intent);
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            action = Action.INFO;
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    intent = new Intent(CurrentSensor.this, SensorInfoActivity.class);
+                    intent.putExtra("id", id);
+                    startActivity(intent);
+                }
+                sensorDAO.close();
                 break;
 
             case COLLECT:
-                layout_load.setVisibility(View.VISIBLE);
                 //NfcLivelo.collectData(id, CurrentSensor.this);
                 //Toast.makeText(this,"Number of samplings = " + NfcLivelo.readNbSamples(this,nfcv),Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this,"Period = " + NfcLivelo.readSamplingFreq(nfcv),Toast.LENGTH_SHORT).show();
@@ -244,6 +282,16 @@ public class CurrentSensor extends AppCompatActivity
                 break;
 
             case LAUNCH:
+                if(NfcLivelo.readNbSamples(this, nfcv) !=0){
+                    Toast.makeText(getBaseContext(), "sensor already sampling, collect or reset it before", Toast.LENGTH_LONG).show();
+                    try {
+                        nfcv.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                };
+
                 sensorDAO = new SensorDAO(this);
                 sensorDAO.open();
                 if(!sensorDAO.exists(id)) { // if does not exist, ask to edit it and store the sensor
@@ -277,26 +325,24 @@ public class CurrentSensor extends AppCompatActivity
                     }
                     return;
                 }
-                //sensorDAO.close();
                 if (NfcLivelo.launchSampling(period, nfcv)) {
                     sensorDAO.updateSensor(id, -1, -1, -1, period, -1, -1);
-                    Toast.makeText(getBaseContext(), "Sampling launched", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Sampling launched every " + period + " seconds", Toast.LENGTH_SHORT).show();
                 }
                 else Toast.makeText(getBaseContext(), "Error: sampling not launched", Toast.LENGTH_SHORT).show();
+                sensorDAO.close();
 
                 try {
                     nfcv.close();
                 } catch (IOException e) {e.printStackTrace();}
                 break;
 
-
-
             case NEW: // dialog box si le capteur existe deja
                 try {
                     nfcv.close();
                 } catch (IOException e) {e.printStackTrace();}
 
-                SensorDAO sensorDAO = new SensorDAO(CurrentSensor.this);
+                sensorDAO = new SensorDAO(CurrentSensor.this);
                 sensorDAO.open();
 
                 if(sensorDAO.exists(id)) {
@@ -340,6 +386,17 @@ public class CurrentSensor extends AppCompatActivity
                     intent.putExtra("new", true);
                     startActivity(intent);
                 }
+                sensorDAO.close();
+                break;
+
+            case RESET:
+                NfcLivelo.reset(nfcv);
+                Toast.makeText(getBaseContext(), "Reset sent", Toast.LENGTH_LONG).show();
+                try {
+                    nfcv.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -371,9 +428,13 @@ public class CurrentSensor extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            finish();
-            System.exit(0);
+        } else if(myNfcAdapter.isEnabled()) {
+            myNfcAdapter.disableForegroundDispatch(this);
+            action = Action.INFO;
+            layout_wait.setVisibility(View.INVISIBLE);
+        }else{
+                finish();
+                System.exit(0);
         }
     }
 
@@ -406,6 +467,10 @@ public class CurrentSensor extends AppCompatActivity
         int id = item.getItemId();
         Intent intent;
         switch(id){
+            case R.id.nav_my_account:
+                intent = new Intent(CurrentSensor.this, LoginActivity.class);
+                startActivity(intent);
+                break;
             case R.id.nav_current_sensor:
                 //intent = new Intent(CurrentSensor.this, CurrentSensor.class);
                 //startActivity(intent);
@@ -426,7 +491,7 @@ public class CurrentSensor extends AppCompatActivity
                 intent = new Intent(CurrentSensor.this, HelpActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.nav_settings:
+            case R.id.nav_preferences:
                 intent = new Intent(CurrentSensor.this, SettingsActivity.class);
                 startActivity(intent);
                 break;
@@ -444,6 +509,16 @@ public class CurrentSensor extends AppCompatActivity
                     data.send();
                 }
 
+                Toast.makeText(this, "sensors and data uploaded successfully", Toast.LENGTH_LONG).show();
+
+                Notification noti = new Notification.Builder(this)
+                        .setContentTitle("Livelo")
+                        .setContentText("sensor and data sent successfully").setSmallIcon(R.mipmap.ic_launcher).build();
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                noti.flags |= Notification.FLAG_AUTO_CANCEL;
+                notificationManager.notify(0, noti);
+
+
                 break;
         }
 
@@ -452,70 +527,120 @@ public class CurrentSensor extends AppCompatActivity
         return true;
     }
 
-    class LoadData extends AsyncTask<String, Integer, Data> {
+    class LoadData extends AsyncTask<String, Integer, List<Long>> {
         int numberSamples;
         float period;
         long now = System.currentTimeMillis(); //current time in milliseconds from 1970
         private TextView tv_load;
         private ProgressBar pb_load;
+        private String id;
 
         protected void onPreExecute(){
-            //tv_load = (TextView) findViewById(R.id.tv_load);
-            //pb_load = (ProgressBar) findViewById(R.id.pb_load);
-            //pb_load.setMax(10);
-
             numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
             period = NfcLivelo.readSamplingFreq(nfcv);
+            progressDialog = new ProgressDialog(CurrentSensor.this);
+            progressDialog.setMax(100);
+            progressDialog.setTitle("Loading " + numberSamples + " samples");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.show();
+
         }
-        protected Data doInBackground(String... strings) {
+        protected List<Long> doInBackground(String... strings) {
+            if (numberSamples == 0) {
+                this.cancel(true);
+                return null;
+            }
 
-            List<Long> timeStamp = new ArrayList();
+            id = strings[0];
+
             List<Long> values = new ArrayList();
-
-            //for (int i = 0; i<101; i++){
-            //    publishProgress(i);
-            //    try {
-            //        Thread.sleep(100);
-            //    } catch (InterruptedException e) {
-            //        e.printStackTrace();
-            //    }
-            //}
-
+            long val;
+            byte i;
+            int blockCount;
             // number of blocks (2048B) to read - 1, such that it only reads the nb of new samples
             //if (k < 1){//nbBlocksToRead) {
-            for(int k = 0; k<2; k++){
+            for(int k = 0; k<1; k++){
                 NfcLivelo.requestOneBlock(nfcv);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                values.addAll(NfcLivelo.readOneBlock(nfcv));
-                //publishProgress((int) ((k / (float) nbBlocksToRead) * 100));
-                publishProgress((int) ((k / (float) 2) * 100));
+                //values.addAll(NfcLivelo.readOneBlock(nfcv));
+                i = 0x44; //Start block of data
+                blockCount = 0;
+
+                //////////////////Start transfer/////////////////////
+                //First blocks from 0x644 to 0x6FF
+                for (int j = 0;j<188; j++){
+                    // to slow down the readings, to check what hapends if we disconnec tduring readings
+                    //try {
+                    //    Thread.sleep(1000);
+                    //} catch (InterruptedException e) {
+                    //    e.printStackTrace();
+                    //}
+                    val = NfcLivelo.readBlockOne(nfcv, i, blockCount, (byte)0x06);
+                    if(val == -1){
+                        return null;
+                    }
+                    values.add(val);
+                    i++;
+                    blockCount++;
+                    publishProgress(blockCount*100/255, (k+1));
+                    if (256*k+blockCount>=numberSamples)
+                        return values;
+                }
+
+                //Second blocks
+                for (int j = 0; j<68; j++){
+                    val = NfcLivelo.readBlockOne(nfcv, i, blockCount, (byte)0x07);
+                    if(val == -1){
+                        return null;
+                    }
+                    values.add(val);
+                    i++;
+                    blockCount++;
+                    publishProgress(blockCount*100/255, (k+1));
+                    if (256*k+blockCount>=numberSamples)
+                        return values;
+                }
+
                 if (isCancelled()) return null;
             }
 
+            Toast.makeText(CurrentSensor.this, "debug: not enough blocks read for nb of samples", Toast.LENGTH_SHORT).show();
+            return null;
+        }
 
-            for(int i = numberSamples; i>0; i--){
-                timeStamp.add(now - (long)((float)i*period));
+        protected void onCancelled(){
+            Toast.makeText(CurrentSensor.this, "data has already been collected", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+            layout_wait.setVisibility(View.INVISIBLE);
+        }
+        protected void onProgressUpdate(Integer... progress) {
+            progressDialog.setProgress(progress[0]);
+            progressDialog.setMessage("loading block " + progress[1] +"/" + 1);
+        }
+
+        protected void onPostExecute(List<Long> values) {
+            if (values == null) {
+                try {
+                    nfcv.close();
+                } catch (IOException e) {e.printStackTrace();}
+                Toast.makeText(CurrentSensor.this, "error reading samples, try it again", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+                return;
             }
 
+            progressDialog.setProgress(progressDialog.getMax());
+            progressDialog.setMessage("saving data");
+            List<Long> timeStamp = new ArrayList();
 
-            return new Data(strings[0], timeStamp, values, CurrentSensor.this);
-        }
+            for(int k = numberSamples; k>0; k--){
+                timeStamp.add(now - (long)((float)k*period));
+            }
 
-        protected void onProgressUpdate(Integer... progress) {
-
-            //setProgressPercent(progress[0]);
-            //pb_load.setProgress(progress[0]);
-            //tv_load.setText(progress[0]);
-        }
-
-        protected void onPostExecute(Data data) {
-            try {
-                nfcv.close();
-            } catch (IOException e) {e.printStackTrace();}
+            Data data = new Data(id, timeStamp, values, CurrentSensor.this);
 
             // store data in the db
             DataDAO dataDAO = new DataDAO(CurrentSensor.this);
@@ -531,8 +656,13 @@ public class CurrentSensor extends AppCompatActivity
             sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, numberSamples, now);
             sensorDAO.close();
 
+            NfcLivelo.reset(nfcv);
+            try {
+                nfcv.close();
+            } catch (IOException e) {e.printStackTrace();}
+
             Toast.makeText(getBaseContext(), "" + numberSamples + " samples collected", Toast.LENGTH_SHORT).show();
-            layout_load.setVisibility(View.INVISIBLE);
+            progressDialog.dismiss();
         }
     }
 }

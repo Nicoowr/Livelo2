@@ -24,12 +24,16 @@
             android:title="Send" />
     </group>
 
-    <item>
+    <item android:title="Settings">
         <menu>
             <item
-                android:id="@+id/nav_settings"
+                android:id="@+id/nav_my_account"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="Settings" />
+                android:title="My Account" />
+            <item
+                android:id="@+id/nav_preferences"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Preferences" />
             <item
                 android:id="@+id/nav_help"
                 android:icon="@drawable/ic_menu_gallery"

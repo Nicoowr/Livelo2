@@ -128,7 +128,8 @@ public class Data {
             return response;
         }
         @Override
-        protected void onPostExecute(String result) {}
+        protected void onPostExecute(String result) {
+        }
 
         @Override
         protected void onPreExecute() {}
