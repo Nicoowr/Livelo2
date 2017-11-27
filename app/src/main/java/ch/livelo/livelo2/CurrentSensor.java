@@ -1,5 +1,6 @@
 package ch.livelo.livelo2;
 
+import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -75,6 +76,16 @@ public class CurrentSensor extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Action bar layout
+
+     //   Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+     //   mActionBarToolbar.setTitle("");
+     //   setSupportActionBar(mActionBarToolbar);
+     //   getSupportActionBar().setTitle("My title");
+
+
+        //Global layout
         setContentView(R.layout.activity_current_sensor);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

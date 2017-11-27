@@ -10,9 +10,14 @@
     <string name="delete_sensors">Delete selected sensor(s)</string>
     <string name="select_sensors">Select sensors</string>
     <string name="delete_all">Delete all sensors</string>
-    <string name="enter_sensor_frequency">Frequency:</string>
+    <string name="enter_sensor_frequency">Period:</string>
     <string name="last_sampling">Last collection:</string>
     <string name="data_nb">Total number of samplings:</string>
+    <string name="get_info">Get info</string>
+    <string name="collect_data">Collect data</string>
+    <string name="launch_sampling">Launch sampling</string>
+    <string name="new_sensor">New sensor</string>
+    <string name="reset">Reset</string>
 
     <string name="connect_the_sensor">Connect the sensor</string>
 
