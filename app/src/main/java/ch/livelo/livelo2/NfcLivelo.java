@@ -211,23 +211,24 @@ public class NfcLivelo {
         return data;
     }
 
-    public static long readBlockOne(NfcV nfcv, byte i, int blockCount, byte address) {
+    public static List<Long> readBlockOne(NfcV nfcv, byte i, int blockCount, byte address) {
         byte[] buffer = {0};        // il fallait l'initialiser
+        List<Long> currentDataList = new ArrayList<>();
         try {
             buffer = nfcv.transceive(new byte[]{0x00, (byte) -64, 0x07, i, address});//Read single block
         } catch (IOException e) {
             e.printStackTrace();
-            return -1;
+            return null;
         }
         for (int l = 0; l < buffer.length; l++) {
             if (l % 2 == 1) {
                 Log.i(String.format("%1$d", blockCount), String.format("%8s", Integer.toBinaryString(buffer[l] & 0xFF)).replace(' ', '0'));
                 Log.i(String.format("%1$d", blockCount), String.format("%8s", Integer.toBinaryString(buffer[l + 1] & 0xFF)).replace(' ', '0'));
                 long currentData = ((((buffer[l] & 0xff) << 8) | (buffer[l + 1] & 0xff)) << 1);
-                return currentData;
+                currentDataList.add(currentData);
             }
         }
-        return -1;
+        return currentDataList;
     }
 
 
@@ -251,7 +252,7 @@ public class NfcLivelo {
     }
 
     public static float readSamplingFreq(NfcV nfcv) {
-        byte[] p = {0};
+        byte[] p = new byte[8];
         try {
             p = nfcv.transceive(new byte[]{0x00, 0x20, 0x03}); //read block 3 from FRAM
         } catch (IOException e) {
@@ -265,6 +266,11 @@ public class NfcLivelo {
     public static boolean launchSampling(int period, NfcV nfcv) {
         reset(nfcv);
 
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         int periodInMs = period * 1000 - 35; //period in ms //rajouter 60* // 15 is to compensate sampling time
 
         byte periodInMsB[] = new byte[4];

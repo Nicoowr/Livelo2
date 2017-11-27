@@ -554,7 +554,7 @@ public class CurrentSensor extends AppCompatActivity
             id = strings[0];
 
             List<Long> values = new ArrayList();
-            long val;
+            List<Long> currentDataList;
             byte i;
             int blockCount;
             // number of blocks (2048B) to read - 1, such that it only reads the nb of new samples
@@ -579,29 +579,31 @@ public class CurrentSensor extends AppCompatActivity
                     //} catch (InterruptedException e) {
                     //    e.printStackTrace();
                     //}
-                    val = NfcLivelo.readBlockOne(nfcv, i, blockCount, (byte)0x06);
-                    if(val == -1){
+
+                    // TODO retester cette partie
+                    currentDataList = NfcLivelo.readBlockOne(nfcv, i, blockCount, (byte)0x06);
+                    if(currentDataList == null){
                         return null;
                     }
-                    values.add(val);
+                    values.addAll(currentDataList);
                     i++;
                     blockCount++;
-                    publishProgress(blockCount*100/255, (k+1));
-                    if (256*k+blockCount>=numberSamples)
+                    publishProgress(blockCount/8*100/255, (k+1));
+                    if (1024*k+blockCount*4>=numberSamples)
                         return values;
                 }
 
                 //Second blocks
                 for (int j = 0; j<68; j++){
-                    val = NfcLivelo.readBlockOne(nfcv, i, blockCount, (byte)0x07);
-                    if(val == -1){
+                    currentDataList = NfcLivelo.readBlockOne(nfcv, i, blockCount, (byte)0x07);
+                    if(currentDataList == null){
                         return null;
                     }
-                    values.add(val);
+                    values.addAll(currentDataList);
                     i++;
                     blockCount++;
-                    publishProgress(blockCount*100/255, (k+1));
-                    if (256*k+blockCount>=numberSamples)
+                    publishProgress(blockCount/8*100/255, (k+1));
+                    if (1024*k+blockCount*4>=numberSamples)
                         return values;
                 }
 
@@ -639,6 +641,8 @@ public class CurrentSensor extends AppCompatActivity
             for(int k = numberSamples; k>0; k--){
                 timeStamp.add(now - (long)((float)k*period));
             }
+
+            values = values.subList(0, numberSamples);
 
             Data data = new Data(id, timeStamp, values, CurrentSensor.this);
 
