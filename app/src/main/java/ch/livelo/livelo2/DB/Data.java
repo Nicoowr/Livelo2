@@ -3,6 +3,7 @@ package ch.livelo.livelo2.DB;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
 
+import ch.livelo.livelo2.CurrentSensor;
 import ch.livelo.livelo2.DataViewActivity;
 import ch.livelo.livelo2.SensorInfoActivity;
 
@@ -28,6 +30,7 @@ public class Data {
     private String sensor_id;
     private List<Long> timeStamp;
     private List<Long> values;
+    private Context call_context;
 
     public Data(String id, Context context) {
         SensorDAO sensorDAO = new SensorDAO(context);
@@ -72,7 +75,8 @@ public class Data {
         this.values = values;
     }
 
-    public boolean send(){
+    public boolean send(String token, Context context){
+        call_context = context;
         JSONObject postData = new JSONObject();
         try {
             postData.put("cmd_key", "raw_pressure");
@@ -85,7 +89,7 @@ public class Data {
             return false;
         }
 
-        new Data.httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postData.toString());
+        new Data.httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postData.toString(), token);
         return false;
     }
 
@@ -101,7 +105,7 @@ public class Data {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setRequestMethod(string[1]);
                 OutputStreamWriter request = new OutputStreamWriter(connection.getOutputStream());
-                request.write(string[2]);
+                request.write(string[2] + ";" + string[3]);
                 request.flush();
                 request.close();
 
@@ -129,6 +133,7 @@ public class Data {
         }
         @Override
         protected void onPostExecute(String result) {
+            Toast.makeText(call_context, "sensors and data uploaded successfully", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -139,3 +144,15 @@ public class Data {
 
     }
 }
+
+
+/*
+example post data
+
+{"cmd_key":"raw_pressure","id":"e007a20000010c8a","t":"[1511878533011, 1511878533012, 1511878657313, 1511878657314, 1511878680793, 1511878680794, 1511878680795, 1511878680796]","val":"[9472, 9472, 9436, 9378, 9436, 9436, 9414, 9402]"}
+
+example post sensor
+
+{"cmd_key":"sensor","id":"e007a20000010c8a","depth":5,"lat":46.5195525,"lng":6.564808593750016,"name":"testnumber4"}
+
+ */

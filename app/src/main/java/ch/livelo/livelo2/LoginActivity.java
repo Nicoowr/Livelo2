@@ -3,6 +3,7 @@ package ch.livelo.livelo2;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +31,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.livelo.livelo2.DB.Sensor;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -61,10 +78,51 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private String email = null;
+    private String passWord = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra("logout", false)){
+            // TODO delete the login.txt file
+            this.email = null;
+            this.passWord = null;
+        }
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = LoginActivity.this.openFileInput("login.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+        if (!ret.isEmpty()) {
+            String[] pieces = ret.split(":");
+            showProgress(true);
+            mAuthTask = new UserLoginTask(pieces[0], pieces[1]);
+            mAuthTask.execute((Void) null);
+        }
+
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -307,21 +365,67 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            /*String response = "";
+            try {
+                URL url = new URL("http://posttestserver.com/post.php?dir=livelo");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestMethod("POST");
+                OutputStreamWriter request = new OutputStreamWriter(connection.getOutputStream());
+                request.write(mEmail + ":" + mPassword);
+                request.flush();
+                request.close();
+
+                // get the response, maybe not necessary
+                String line = "";
+                InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                response = sb.toString();
+
+                isr.close();
+                reader.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+
+            // TODO return false or true depending on the response
+            //CurrentSensor.setToken(response);
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                File file = new File("login.txt");
+                file.delete();
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(LoginActivity.this.openFileOutput("login.txt", Context.MODE_PRIVATE));
+                outputStreamWriter.write(new String(mEmail + ":" + mPassword));
+                outputStreamWriter.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+            //try {
+            //    // Simulate network access.
+            //    Thread.sleep(2000);
+            //} catch (InterruptedException e) {
+            //    return false;
+            //}
+
+            //for (String credential : DUMMY_CREDENTIALS) {
+            //    String[] pieces = credential.split(":");
+            //    if (pieces[0].equals(mEmail)) {
+            //        // Account exists, return true if the password matches.
+            //        return pieces[1].equals(mPassword);
+            //    }
+            //}
 
             // TODO: register the new account here.
             return true;

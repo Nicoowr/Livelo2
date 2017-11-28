@@ -168,7 +168,7 @@ public class Sensor {
 
     }
 
-    public boolean send(){
+    public boolean send(String token){
         JSONObject postSensor = new JSONObject();
         try {
             postSensor.put("cmd_key", "sensor");
@@ -187,7 +187,7 @@ public class Sensor {
             return false;
         }
 
-        new httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postSensor.toString());
+        new httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postSensor.toString(), token);
         return false;
     }
 
@@ -203,7 +203,7 @@ public class Sensor {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setRequestMethod(string[1]);
                 OutputStreamWriter request = new OutputStreamWriter(connection.getOutputStream());
-                request.write(string[2]);
+                request.write(string[2] + ";" + string[3]);
                 request.flush();
                 request.close();
 

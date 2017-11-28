@@ -68,13 +68,56 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_new" />
 
+    <!--Button
+        android:id="@+id/post"
+        android:layout_width="wrap_content"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:onClick="goToPost"
+        android:text="Post test"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reset" /-->
+
+    <!--Button
+        android:id="@+id/disp"
+        android:layout_width="wrap_content"
+        android:layout_height="49dp"
+        android:layout_alignBottom="@+id/tv_wait"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:onClick="goToDisp"
+        android:text="Disp response"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post" /-->
+
+    <!--TextView
+        android:id="@+id/tv_post_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_wait"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintTop_toBottomOf="@+id/disp"
+        tools:layout_editor_absoluteX="215dp" /-->
+
     <RelativeLayout
         android:id="@+id/layout_wait"
         android:layout_width="368dp"
-        android:layout_height="173dp"
-        android:visibility="invisible"
+        android:layout_height="97dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="8dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reset">
 
         <ProgressBar
             android:id="@+id/progressBar3"

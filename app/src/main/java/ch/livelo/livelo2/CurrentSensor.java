@@ -1,6 +1,7 @@
 package ch.livelo.livelo2;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -41,7 +42,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +76,10 @@ public class CurrentSensor extends AppCompatActivity
     private int period = 0;
     private RelativeLayout layout_wait;
     private TextView tv_wait;
+    private TextView tv_post_test;
     private ProgressDialog progressDialog;
+    private String token;
+    private String response = "";
 
     public static SensorDAO sensorDAO;
 
@@ -77,7 +87,8 @@ public class CurrentSensor extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Action bar layout
+
+            //Action bar layout
 
      //   Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
      //   mActionBarToolbar.setTitle("");
@@ -91,6 +102,7 @@ public class CurrentSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
         tv_wait = (TextView) findViewById(R.id.tv_wait);
+        tv_post_test = (TextView) findViewById(R.id.tv_post_test);
 
         setSupportActionBar(toolbar);
 
@@ -126,6 +138,14 @@ public class CurrentSensor extends AppCompatActivity
         myNfcAdapter.disableForegroundDispatch(this);
         super.onPause();
     }
+
+    //public void goToPost(View view) {
+    //    layout_wait.setVisibility(View.INVISIBLE);
+    //    new CurrentSensor.httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", "asdfjlaksjdéfadsf");
+    //}
+    //public void goToDisp(View view) {
+    //    tv_post_test.setText(response);
+    //}
 
     public void goToInfo(View view) {
         tv_wait.setText("Connect the sensor to get information");
@@ -515,12 +535,11 @@ public class CurrentSensor extends AppCompatActivity
 
 
                 for (Sensor sensor:sensorsList) {
-                    sensor.send();
+                    sensor.send(this.token);
                     Data data = new Data(sensor.getId(), this);
-                    data.send();
+                    data.send(this.token, this);
                 }
 
-                Toast.makeText(this, "sensors and data uploaded successfully", Toast.LENGTH_LONG).show();
 
                 Notification noti = new Notification.Builder(this)
                         .setContentTitle("Livelo")
@@ -680,5 +699,57 @@ public class CurrentSensor extends AppCompatActivity
             progressDialog.dismiss();
         }
     }
+
+    class httpRequest extends AsyncTask<String, String, String> {
+
+        private Exception exception;
+        TextView tv_post;
+        protected String doInBackground(String... string) {
+            try {
+                URL url = new URL(string[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestMethod(string[1]);
+                OutputStreamWriter request = new OutputStreamWriter(connection.getOutputStream());
+                request.write(string[2]);
+                request.flush();
+                request.close();
+
+                // get the response, maybe not necessary
+                String line = "";
+                InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+
+                response = sb.toString();
+
+                isr.close();
+                reader.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            tv_post_test.setText(result);
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        //@Override
+        //protected void onProgressUpdate(Void... values) {}
+
+    }
+
 }
 
