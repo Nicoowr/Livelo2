@@ -76,7 +76,7 @@ public class CurrentSensor extends AppCompatActivity
     private int period = 0;
     private RelativeLayout layout_wait;
     private TextView tv_wait;
-    private TextView tv_post_test;
+    //private TextView tv_post_test;
     private ProgressDialog progressDialog;
     private String token;
     private String response = "";
@@ -102,7 +102,7 @@ public class CurrentSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
         tv_wait = (TextView) findViewById(R.id.tv_wait);
-        tv_post_test = (TextView) findViewById(R.id.tv_post_test);
+        //tv_post_test = (TextView) findViewById(R.id.tv_post_test);
 
         setSupportActionBar(toolbar);
 
@@ -740,7 +740,7 @@ public class CurrentSensor extends AppCompatActivity
         }
         @Override
         protected void onPostExecute(String result) {
-            tv_post_test.setText(result);
+            //tv_post_test.setText(result);
         }
 
         @Override
