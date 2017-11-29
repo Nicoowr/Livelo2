@@ -44,7 +44,7 @@ public class SensorAdapter extends ArrayAdapter<Sensor> {
         }
 
         TextView name = (TextView) convertView.findViewById(R.id.mysensor_name);
-        TextView coord = (TextView) convertView.findViewById(R.id.myposition);
+        //TextView coord = (TextView) convertView.findViewById(R.id.myposition);
         name.setText(sensor.getName());
         //coord.setText("Latitude: " + sensor.getPosition()[0] + "\nLongitude: " + sensor.getPosition()[1]);
         TextView sensor_id = (TextView) convertView.findViewById(R.id.mysensor_id);
