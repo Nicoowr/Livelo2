@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:drawableLeft="@drawable/launch_sized"
+            android:drawableStart="@drawable/launch_sized"
             android:onClick="goToLaunch"
             android:text="@string/launch_sampling"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,11 +75,9 @@
             app:layout_constraintTop_toBottomOf="@+id/button_launch" />
 
         <Button
-            android:id="@+id/reset"
+            android:id="@+id/button_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:drawableLeft="@drawable/reset_sized"
             android:onClick="goToReset"

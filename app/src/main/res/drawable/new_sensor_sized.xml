@@ -5,6 +5,7 @@
         android:drawable="@drawable/new_sensor"
         android:width="@dimen/icon_size"
         android:height="@dimen/icon_size"
+
         />
 
 </layer-list >

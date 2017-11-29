@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.NdefFormatable;
@@ -107,6 +109,11 @@ public class CurrentSensor extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+        /***** Button shape ****/
+        shapeButtons();
+        /***********************/
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -115,6 +122,7 @@ public class CurrentSensor extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
         // NFC Intent filter
         myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -126,6 +134,38 @@ public class CurrentSensor extends AppCompatActivity
         };
         mTechLists = new String[][]{new String[]{NfcV.class.getName()},
                 new String[]{NdefFormatable.class.getName()}};
+    }
+
+    public void shapeButtons(){
+        Drawable launch = getResources().getDrawable(R.drawable.launch_sized);
+        launch.setBounds(0, 0, (int)(launch.getIntrinsicWidth()*0.5),(int)(launch.getIntrinsicHeight()*0.5));
+        ScaleDrawable sd = new ScaleDrawable(launch, 0, 30, 30);
+        Button btn = (Button) findViewById(R.id.button_launch);
+        btn.setCompoundDrawables(sd.getDrawable(), null, null, null);
+
+        Drawable get_info = getResources().getDrawable(R.drawable.get_info_sized);
+        get_info.setBounds(0, 0, (int)(get_info.getIntrinsicWidth()*0.5),(int)(get_info.getIntrinsicHeight()*0.5));
+        ScaleDrawable sd1 = new ScaleDrawable(get_info, 0, 30, 30);
+        Button btn1 = (Button) findViewById(R.id.button_info);
+        btn1.setCompoundDrawables(sd1.getDrawable(), null, null, null);
+
+        Drawable collect = getResources().getDrawable(R.drawable.collect_sized);
+        collect.setBounds(0, 0, (int)(collect.getIntrinsicWidth()*0.5),(int)(collect.getIntrinsicHeight()*0.5));
+        ScaleDrawable sd2 = new ScaleDrawable(collect, 0, 30, 30);
+        Button btn2 = (Button) findViewById(R.id.button_collect);
+        btn2.setCompoundDrawables(sd2.getDrawable(), null, null, null);
+
+        Drawable new_sensor = getResources().getDrawable(R.drawable.new_sensor_sized);
+        new_sensor.setBounds(0, 0, (int)(new_sensor.getIntrinsicWidth()*0.5),(int)(new_sensor.getIntrinsicHeight()*0.5));
+        ScaleDrawable sd3 = new ScaleDrawable(new_sensor, 0, 30, 30);
+        Button btn3 = (Button) findViewById(R.id.button_new);
+        btn3.setCompoundDrawables(sd3.getDrawable(), null, null, null);
+
+        Drawable reset = getResources().getDrawable(R.drawable.reset_sized);
+        reset.setBounds(0, 0, (int)(reset.getIntrinsicWidth()*0.5),(int)(reset.getIntrinsicHeight()*0.5));
+        ScaleDrawable sd4 = new ScaleDrawable(reset, 0, 30, 30);
+        Button btn4 = (Button) findViewById(R.id.button_reset);
+        btn4.setCompoundDrawables(sd4.getDrawable(), null, null, null);
     }
 
     @Override
