@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="buttonStyle">@style/RobotoButtonStyle</item>
+        <item name="android:windowBackground">@drawable/wave</item>
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">

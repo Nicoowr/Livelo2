@@ -4,23 +4,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_current_sensor"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/drop_sized"
             android:title="@string/nav_current_sensor" />
         <item
             android:id="@+id/nav_my_sensors"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/my_sensors_sized"
             android:title="@string/nav_my_sensors" />
         <item
             android:id="@+id/nav_sensors_map"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/map_sized"
             android:title="Sensors Map" />
-        <item
-            android:id="@+id/nav_my_data"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="My Data" />
+
         <item
             android:id="@+id/nav_send"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/send_sized"
             android:title="Send" />
     </group>
 
@@ -28,7 +25,7 @@
         <menu>
             <item
                 android:id="@+id/nav_my_account"
-                android:icon="@drawable/ic_menu_manage"
+                android:icon="@drawable/profile_sized"
                 android:title="My Account" />
             <item
                 android:id="@+id/nav_preferences"
@@ -36,7 +33,7 @@
                 android:title="Preferences" />
             <item
                 android:id="@+id/nav_help"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/help_sized"
                 android:title="Help" />
         </menu>
     </item>

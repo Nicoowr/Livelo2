@@ -514,10 +514,6 @@ public class CurrentSensor extends AppCompatActivity
                 intent = new Intent(CurrentSensor.this, SensorMapsActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.nav_my_data:
-                //intent = new Intent(CurrentSensor.this, SettingsActivity.class);
-                //startActivity(intent);
-                break;
             case R.id.nav_help:
                 intent = new Intent(CurrentSensor.this, HelpActivity.class);
                 startActivity(intent);
