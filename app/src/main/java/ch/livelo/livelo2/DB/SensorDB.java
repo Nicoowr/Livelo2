@@ -15,12 +15,12 @@ public class SensorDB extends SQLiteOpenHelper {
     public static int NB_OF_FIELDS = 9;
     public static final String TABLE_SENSORS = "sensors";
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_SENSOR_ID = "sensor_id";
-    public static final String COLUMN_LATITUDE = "latitude";
-    public static final String COLUMN_LONGITUDE = "longitude";
-    public static final String COLUMN_DEPTH = "depth";
-    public static final String COLUMN_FREQUENCY = "frequency";
+    public static final String COLUMN_NAME = "Name";
+    public static final String COLUMN_SENSOR_ID = "Sensor_id";
+    public static final String COLUMN_LATITUDE = "Latitude";
+    public static final String COLUMN_LONGITUDE = "Longitude";
+    public static final String COLUMN_DEPTH = "Depth";
+    public static final String COLUMN_FREQUENCY = "Period";
     public static final String COLUMN_DATANB = "datanb";
     public static final String COLUMN_LASTCOLLECT = "lastcollect";
 
@@ -30,7 +30,7 @@ public class SensorDB extends SQLiteOpenHelper {
 
     //Other info
     protected static final String DATABASE_NAME = "sensors.db";
-    protected static final int DATABASE_VERSION = 3;
+    protected static final int DATABASE_VERSION = 1;
 
     //Create table
     protected static final String DATABASE_CREATE = "create table "

@@ -2,9 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:drawable="@drawable/reset"
+        android:drawable="@drawable/reset_logo"
         android:width="@dimen/icon_size"
         android:height="@dimen/icon_size"
+
         />
 
 </layer-list >

@@ -18,6 +18,17 @@
     <string name="launch_sampling">Launch sampling</string>
     <string name="new_sensor">New sensor</string>
     <string name="reset">Reset</string>
+    <string name="edit">Edit</string>
+    <string name="see_on_map">See on map</string>
+    <string name="delete_data">Delete data</string>
+    <string name="view_data">View data</string>
+    <string name="delete_sensor">Delete sensor</string>
+
+    <string name="connect_reset">Approach the logger to reset it</string>
+    <string name="connect_register">Approach the logger to register it</string>
+    <string name="connect_launch">Approach the logger to start sampling every </string>
+    <string name="connect_collect">Approach the logger to collect data</string>
+    <string name="connect_info">Approach the logger to get information </string>
 
     <string name="connect_the_sensor">Connect the sensor</string>
 

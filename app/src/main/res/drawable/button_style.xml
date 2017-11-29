@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <layer-list>
+            <item android:left="5dp" android:right="5dp" android:top="5dp">
+                <shape>
+                    <corners android:radius="3dp" />
+                    <solid android:color="#0F4858" />
+                </shape>
+            </item>
+            <item android:bottom="2dp" android:left="0dp" android:right="0dp">
+                <shape>
+                    <gradient android:angle="270"
+                        android:endColor="#ceb0f7" android:startColor="#ceb0f7" />
+                    <padding android:bottom="10dp" android:left="10dp"
+                        android:right="10dp" android:top="10dp" />
+                </shape>
+            </item>
+        </layer-list>
 
+    </item>
     <item>
         <layer-list>
             <item android:left="5dp" android:right="5dp" android:top="5dp">
@@ -19,6 +37,7 @@
                 </shape>
             </item>
         </layer-list>
+
     </item>
 
 </selector>

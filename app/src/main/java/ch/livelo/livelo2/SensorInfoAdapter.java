@@ -49,22 +49,6 @@ public class SensorInfoAdapter extends ArrayAdapter<String[]> {
         item_text.setText(sensor_item[0]);
         item.setText(sensor_item[1]);
 
-    //   TextView name = (TextView) convertView.findViewById(R.id.sensor_name);
-    //   TextView sensor_id = (TextView) convertView.findViewById(R.id.sensor_id);
-    //   TextView latitude = (TextView) convertView.findViewById(R.id.sensor_latitude);
-    //   TextView longitude = (TextView) convertView.findViewById(R.id.sensor_longitude);
-    //   TextView depth = (TextView) convertView.findViewById(R.id.sensor_depth);
-    //   TextView frequency = (TextView) convertView.findViewById(R.id.sensor_frequency);
-    //   TextView dataNb = (TextView) convertView.findViewById(R.id.sensor_datanb);
-    //   TextView lastCollect = (TextView) convertView.findViewById(R.id.sensor_last_collect);
-    //   name.setText(sensor.getName());
-    //   sensor_id.setText(sensor.getId());
-    //   latitude.setText("" + sensor.getPosition()[0]);
-    //   longitude.setText("" + sensor.getPosition()[1]);
-    //   depth.setText("" + sensor.getDepth());
-    //   frequency.setText("" + sensor.getFrequency());
-    //   dataNb.setText("" + sensor.getDataNb());
-    //   lastCollect.setText("" + sensor.getLastCollect());
 
 
         return convertView;

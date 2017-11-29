@@ -159,8 +159,11 @@ public class Sensor {
         List<String[]> infoList = new ArrayList<String[]>();
         String[] infoArray = this.getArrayInfo();
 
+        String[] allColumns = { "", "Name",
+                "Sensor ID", "Latitude", "Longitude",
+                "Depth", "Period", "Amount of data", "Last collect date"};
         for(int i = 1; i< SensorDB.NB_OF_FIELDS; i++){
-            String[] item_couple = new String[]{SensorDB.allColumns[i], infoArray[i-1]};
+            String[] item_couple = new String[]{allColumns[i], infoArray[i-1]};
             infoList.add(item_couple);
         }
 

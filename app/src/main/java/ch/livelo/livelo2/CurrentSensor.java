@@ -188,13 +188,13 @@ public class CurrentSensor extends AppCompatActivity
     //}
 
     public void goToInfo(View view) {
-        tv_wait.setText("Connect the sensor to get information");
+        tv_wait.setText(R.string.connect_info);
         action = Action.INFO;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
 
     public void goToCollect(View view) {
-        tv_wait.setText("Connect the sensor to collect data");
+        tv_wait.setText(R.string.connect_collect);
         /** For testing purpose **/
         //new LoadData().execute();
         /*************************/
@@ -226,7 +226,7 @@ public class CurrentSensor extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         period = Integer.valueOf(edit_period.getText().toString());
                         action = Action.LAUNCH;
-                        tv_wait.setText("Connect the sensor to start sampling every " + period + " seconds");
+                        tv_wait.setText(R.string.connect_launch + period + " seconds");
 
                         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
                         dialog.dismiss();
@@ -263,7 +263,7 @@ public class CurrentSensor extends AppCompatActivity
     }
 
     public void goToNew(View view) {
-        tv_wait.setText("Connect the sensor to register it");
+        tv_wait.setText(R.string.connect_register);
         action = Action.NEW;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
         /********************* Pour les tests, pas besoin de détecter un senseur***************/
@@ -274,7 +274,7 @@ public class CurrentSensor extends AppCompatActivity
 
     /** For testing purpose **/
     public void goToReset(View view) {
-        tv_wait.setText("Connect the sensor to reset it");
+        tv_wait.setText(R.string.connect_reset);
         action = Action.RESET;
         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
     }
@@ -354,7 +354,7 @@ public class CurrentSensor extends AppCompatActivity
 
             case LAUNCH:
                 if(NfcLivelo.readNbSamples(this, nfcv) !=0){
-                    Toast.makeText(getBaseContext(), "sensor already sampling, collect or reset it before", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "sensor already sampling, collect or reset_logo it before", Toast.LENGTH_LONG).show();
                     try {
                         nfcv.close();
                     } catch (IOException e) {

@@ -106,9 +106,12 @@
                 android:id="@+id/tv_wait"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_above="@+id/progressBar3"
                 android:layout_centerHorizontal="true"
-                android:text="@string/connect_the_sensor" />
+                android:layout_marginBottom="18dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                 />
 
         </RelativeLayout>
 
