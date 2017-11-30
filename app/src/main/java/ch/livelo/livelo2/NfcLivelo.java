@@ -264,6 +264,14 @@ public class NfcLivelo {
     }
 
     public static boolean launchSampling(int period, NfcV nfcv) {
+        resetController(nfcv);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         reset(nfcv);
 
         try {
@@ -271,7 +279,7 @@ public class NfcLivelo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        int periodInMs = period * 1000 - 35; //period in ms //rajouter 60* // 15 is to compensate sampling time
+        int periodInMs = period - 35; //period in ms //rajouter 60* // 15 is to compensate sampling time
 
         byte periodInMsB[] = new byte[4];
 
@@ -327,6 +335,8 @@ public class NfcLivelo {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //FIXME
         if((samplingIsLaunched[3] & (byte)16)== (1 << 4))
             return true;
         else
@@ -337,6 +347,27 @@ public class NfcLivelo {
 
     public static void reset(NfcV nfcv) {
         final byte readCommand[] = new byte[]{0x00, 0x21, (byte) 0, 0x01, 0x00, 0x40, 0x03, 0x01, 0x01, 0x00, 0x00};
+        try {
+            nfcv.transceive(readCommand);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void resetController(NfcV nfcv) {
+        final byte readCommand[] = new byte[]{
+                0x00,
+                0x21,
+                (byte) 0,
+                -128, //General control register
+                0x00, //Firmware Status register
+                0x00, //Sensor control register
+                0x00, //Frequency control register: custom time
+                0x00, //Number of passes register
+                0x00, //Averaging register
+                0x00, //Interrupt control register: infinite sampling
+                0x00 //Error control register
+        };
         try {
             nfcv.transceive(readCommand);
         } catch (IOException e) {

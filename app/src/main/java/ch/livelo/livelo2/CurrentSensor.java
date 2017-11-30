@@ -206,7 +206,7 @@ public class CurrentSensor extends AppCompatActivity
     public void goToLaunch(View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Sampling  period [s]");
+        builder.setMessage("Sampling  period [ms]");
         //final LinearLayout dialogLayout = new LinearLayout(this);
         final EditText edit_period = new EditText(this);
         edit_period.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -461,6 +461,12 @@ public class CurrentSensor extends AppCompatActivity
                 break;
 
             case RESET:
+                NfcLivelo.resetController(nfcv);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 NfcLivelo.reset(nfcv);
                 Toast.makeText(getBaseContext(), "Reset sent", Toast.LENGTH_LONG).show();
                 try {
@@ -602,13 +608,24 @@ public class CurrentSensor extends AppCompatActivity
         private String id;
 
         protected void onPreExecute(){
+
+
             numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
+            //numberSamples = 40000;
             period = NfcLivelo.readSamplingFreq(nfcv);
             progressDialog = new ProgressDialog(CurrentSensor.this);
             progressDialog.setMax(100);
             progressDialog.setTitle("Loading " + numberSamples + " samples");
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.show();
+
+            NfcLivelo.reset(nfcv);
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }
         protected List<Long> doInBackground(String... strings) {
@@ -625,7 +642,7 @@ public class CurrentSensor extends AppCompatActivity
             int blockCount;
             // number of blocks (2048B) to read - 1, such that it only reads the nb of new samples
             //if (k < 1){//nbBlocksToRead) {
-            for(int k = 0; k<1; k++){
+            for(int k = 0; k<64; k++){
                 NfcLivelo.requestOneBlock(nfcv);
                 try {
                     Thread.sleep(100);
@@ -725,6 +742,14 @@ public class CurrentSensor extends AppCompatActivity
             sensorDAO.open();
             sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, numberSamples, now);
             sensorDAO.close();
+
+            NfcLivelo.resetController(nfcv);
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             NfcLivelo.reset(nfcv);
             try {
