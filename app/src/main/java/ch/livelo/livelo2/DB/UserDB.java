@@ -1,9 +1,9 @@
 package ch.livelo.livelo2.DB;
 
-        import android.content.Context;
-        import android.database.sqlite.SQLiteDatabase;
-        import android.database.sqlite.SQLiteOpenHelper;
-        import android.util.Log;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Remi on 28/11/2017.
@@ -20,7 +20,7 @@ public class UserDB extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_TOKEN = "token";
 
-    public static String[] allColumns = { COLUMN_EMAIL, COLUMN_EMAIL, COLUMN_TOKEN, COLUMN_TOKEN};
+    public static String[] allColumns = { COLUMN_ID, COLUMN_EMAIL, COLUMN_EMAIL, COLUMN_TOKEN};
 
     //Other info
     protected static final String DATABASE_NAME = "user.db";

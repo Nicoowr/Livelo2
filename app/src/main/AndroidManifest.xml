@@ -35,7 +35,6 @@
 
         <activity
             android:name=".CurrentSensor"
-
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -58,7 +57,7 @@
             android:label="My sensors"
             android:parentActivityName=".CurrentSensor"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -83,11 +82,11 @@
 
         <activity
             android:name=".SensorMapsActivity"
-            android:label="@string/title_activity_sensor_maps">
-        </activity>
+            android:label="@string/title_activity_sensor_maps"></activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
+        <activity android:name=".UserActivity"></activity>
     </application>
 
 </manifest>

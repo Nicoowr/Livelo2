@@ -59,6 +59,7 @@ import ch.livelo.livelo2.DB.Data;
 import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
+import ch.livelo.livelo2.DB.UserDAO;
 import ch.livelo.livelo2.MySensors.MySensors;
 /**
  * TODO message success post pour data et sensors
@@ -78,6 +79,7 @@ public class CurrentSensor extends AppCompatActivity
     private int period = 0;
     private RelativeLayout layout_wait;
     private TextView tv_wait;
+    private TextView tv_email;
     //private TextView tv_post_test;
     private ProgressDialog progressDialog;
     private String token;
@@ -88,7 +90,6 @@ public class CurrentSensor extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
             //Action bar layout
 
@@ -104,10 +105,10 @@ public class CurrentSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
         tv_wait = (TextView) findViewById(R.id.tv_wait);
+        tv_email = (TextView) findViewById(R.id.tv_email);
         //tv_post_test = (TextView) findViewById(R.id.tv_post_test);
 
         setSupportActionBar(toolbar);
-
 
         /***** Button shape ****/
         shapeButtons();
@@ -170,6 +171,15 @@ public class CurrentSensor extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        //UserDAO userDAO = new UserDAO(this);
+        //userDAO.open();
+        //if(userDAO.isLogged())
+            // FIXME access to the drawer header
+            //tv_email.setText(userDAO.getEmail());
+        //else
+            //tv_email.setText("not logged in");
+        //userDAO.close();
+
         super.onResume();
     }
 
@@ -293,6 +303,13 @@ public class CurrentSensor extends AppCompatActivity
             e.printStackTrace();
         }
         final String id = NfcLivelo.getId(nfcv);
+        //Wait for the identification
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (id.isEmpty()){
             Toast.makeText(getBaseContext(), "Unable to read id", Toast.LENGTH_LONG).show();
             return;
@@ -545,8 +562,15 @@ public class CurrentSensor extends AppCompatActivity
         Intent intent;
         switch(id){
             case R.id.nav_my_account:
-                intent = new Intent(CurrentSensor.this, LoginActivity.class);
-                startActivity(intent);
+                UserDAO userDAO = new UserDAO(this);
+                userDAO.open();
+                if(userDAO.isLogged()){
+                    intent = new Intent(CurrentSensor.this, UserActivity.class);
+                    startActivity(intent);
+                }else{
+                    intent = new Intent(CurrentSensor.this, LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.nav_current_sensor:
                 //intent = new Intent(CurrentSensor.this, CurrentSensor.class);

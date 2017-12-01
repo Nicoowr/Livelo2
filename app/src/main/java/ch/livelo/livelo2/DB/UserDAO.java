@@ -1,15 +1,15 @@
 package ch.livelo.livelo2.DB;
 
-        import android.content.ContentValues;
-        import android.content.Context;
-        import android.database.Cursor;
-        import android.database.sqlite.SQLiteDatabase;
-        import android.icu.lang.UScript;
-        import android.util.Log;
-        import android.widget.Toast;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.icu.lang.UScript;
+import android.util.Log;
+import android.widget.Toast;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Remi on 28/11/2017.
@@ -46,6 +46,7 @@ public class UserDAO {
 
     public void addUser(String email, String password) {
         ContentValues values = new ContentValues();
+        values.put(UserDB.COLUMN_ID, "1");
         values.put(UserDB.COLUMN_EMAIL, email);
         values.put(UserDB.COLUMN_PASSWORD, password);
         values.put(UserDB.COLUMN_TOKEN, "");
@@ -62,20 +63,13 @@ public class UserDAO {
 
 
     public void updateToken(String token){
-
         ContentValues cv = new ContentValues();
         cv.put(UserDB.COLUMN_TOKEN, token);
-
         mDb.update(UserDB.TABLE_USER, cv, UserDB.COLUMN_ID + "='"+ "1" + "'", null);
     }
 
-    public boolean logOut() {
-        ContentValues cv = new ContentValues();
-        cv.put(UserDB.COLUMN_EMAIL, "");
-        cv.put(UserDB.COLUMN_PASSWORD, "");
-        cv.put(UserDB.COLUMN_TOKEN, "");
-        mDb.update(UserDB.TABLE_USER, cv, UserDB.COLUMN_ID + "='"+ "1" + "'", null);
-        return true;
+    public long logOut() {
+        return mDb.delete(UserDB.TABLE_USER, UserDB.COLUMN_ID + " = ?", new String[]{"1"});
     }
 
     public String getEmail(){
@@ -84,7 +78,7 @@ public class UserDAO {
                 + " = '" + "1" + "'";
         Cursor cursor = mDb.rawQuery(Query, null);
         cursor.moveToFirst();
-        return cursor.getString(1);
+        return cursor.getString(0);
     }
 
     public String getPassword(){
@@ -97,7 +91,7 @@ public class UserDAO {
     }
 
 
-    public boolean exists() {
+    public boolean isLogged() {
         mDb = this.getDb();
         String Query = "Select * from " + UserDB.TABLE_USER + " where " + UserDB.COLUMN_ID
                 + " = '" + "1" + "'";

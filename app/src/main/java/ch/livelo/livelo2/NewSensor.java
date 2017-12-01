@@ -113,7 +113,6 @@ public class NewSensor extends Activity {
 
     public void pickPlace(View view){
 
-        // FIXME ça marche que si il n'y a pas internet, je pense que c'est un probleme d'API key
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
