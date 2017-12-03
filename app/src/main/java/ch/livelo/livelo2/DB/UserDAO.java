@@ -87,7 +87,7 @@ public class UserDAO {
                 + " = '" + "1" + "'";
         Cursor cursor = mDb.rawQuery(Query, null);
         cursor.moveToFirst();
-        return cursor.getString(2);
+        return cursor.getString(1);
     }
 
 

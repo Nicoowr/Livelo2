@@ -69,13 +69,13 @@ import ch.livelo.livelo2.MySensors.MySensors;
 public class CurrentSensor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    enum Action{INFO, COLLECT, LAUNCH, NEW, RESET}
+    enum Action{NONE, INFO, COLLECT, LAUNCH, NEW, RESET}
     private NfcAdapter myNfcAdapter;
     private NfcV nfcv;
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
-    private Action action = Action.INFO;
+    private Action action = Action.NONE;
     private int period = 0;
     private RelativeLayout layout_wait;
     private TextView tv_wait;
@@ -127,14 +127,16 @@ public class CurrentSensor extends AppCompatActivity
 
         // NFC Intent filter
         myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        mPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        IntentFilter nfcv = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
-        mFilters = new IntentFilter[]{
-                nfcv,
-        };
-        mTechLists = new String[][]{new String[]{NfcV.class.getName()},
-                new String[]{NdefFormatable.class.getName()}};
+        if (myNfcAdapter != null) {
+            mPendingIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            IntentFilter nfcv = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
+            mFilters = new IntentFilter[]{
+                    nfcv,
+            };
+            mTechLists = new String[][]{new String[]{NfcV.class.getName()},
+                    new String[]{NdefFormatable.class.getName()}};
+        }
     }
 
     public void shapeButtons(){
@@ -185,7 +187,8 @@ public class CurrentSensor extends AppCompatActivity
 
     @Override
     protected void onPause() {
-        myNfcAdapter.disableForegroundDispatch(this);
+        if (myNfcAdapter != null)
+            myNfcAdapter.disableForegroundDispatch(this);
         super.onPause();
     }
 
@@ -198,22 +201,28 @@ public class CurrentSensor extends AppCompatActivity
     //}
 
     public void goToInfo(View view) {
+        if (!enableNfc())
+            return;
         tv_wait.setText(R.string.connect_info);
         action = Action.INFO;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        layout_wait.setVisibility(View.VISIBLE);
     }
 
     public void goToCollect(View view) {
+        if (!enableNfc())
+            return;
         tv_wait.setText(R.string.connect_collect);
         /** For testing purpose **/
-        //new LoadData().execute();
+        /// /new LoadData().execute();
         /*************************/
 
         action = Action.COLLECT;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        layout_wait.setVisibility(View.VISIBLE);
     }
 
     public void goToLaunch(View view) {
+        if (!enableNfc())
+            return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Sampling  period [ms]");
@@ -273,20 +282,27 @@ public class CurrentSensor extends AppCompatActivity
     }
 
     public void goToNew(View view) {
+        if (!enableNfc()) {
+            /********************* Pour les tests, pas besoin de détecter un senseur***************/
+            startActivity(new Intent(this, NewSensor.class));
+            return;
+        }
         tv_wait.setText(R.string.connect_register);
+        layout_wait.setVisibility(View.VISIBLE);
         action = Action.NEW;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
-        /********************* Pour les tests, pas besoin de détecter un senseur***************/
-        //Intent intent = new Intent(this, NewSensor.class);
-        //startActivity(intent);
+
 
     }
 
     /** For testing purpose **/
     public void goToReset(View view) {
+        if (!enableNfc())
+            return;
+
         tv_wait.setText(R.string.connect_reset);
         action = Action.RESET;
-        if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
+        layout_wait.setVisibility(View.VISIBLE);
+
     }
     /*************************/
 
@@ -347,7 +363,7 @@ public class CurrentSensor extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            action = Action.INFO;
+                            action = Action.NONE;
                         }
                     });
                     AlertDialog alert = builder.create();
@@ -401,7 +417,7 @@ public class CurrentSensor extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            action = Action.INFO;
+                            action = Action.NONE;
                         }
                     });
                     AlertDialog alert = builder.create();
@@ -462,7 +478,7 @@ public class CurrentSensor extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            action = Action.INFO;
+                            action = Action.NONE;
                         }
                     });
                     AlertDialog alert = builder.create();
@@ -522,9 +538,9 @@ public class CurrentSensor extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if(myNfcAdapter.isEnabled()) {
+        } else if(action != Action.NONE) {
             myNfcAdapter.disableForegroundDispatch(this);
-            action = Action.INFO;
+            action = Action.NONE;
             layout_wait.setVisibility(View.INVISIBLE);
         }else{
                 finish();
@@ -631,27 +647,28 @@ public class CurrentSensor extends AppCompatActivity
         private ProgressBar pb_load;
         private String id;
 
-        protected void onPreExecute(){
+        protected void onPreExecute() {
 
+            if (myNfcAdapter != null) {
+                numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
+                //numberSamples = 40000;
+                period = NfcLivelo.readSamplingFreq(nfcv);
+                progressDialog = new ProgressDialog(CurrentSensor.this);
+                progressDialog.setMax(100);
+                progressDialog.setTitle("Loading " + numberSamples + " samples");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.show();
 
-            numberSamples = NfcLivelo.readNbSamples(CurrentSensor.this, nfcv);
-            //numberSamples = 40000;
-            period = NfcLivelo.readSamplingFreq(nfcv);
-            progressDialog = new ProgressDialog(CurrentSensor.this);
-            progressDialog.setMax(100);
-            progressDialog.setTitle("Loading " + numberSamples + " samples");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.show();
+                NfcLivelo.reset(nfcv);
 
-            NfcLivelo.reset(nfcv);
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-
         }
+
         protected List<Long> doInBackground(String... strings) {
             if (numberSamples == 0) {
                 this.cancel(true);
@@ -720,6 +737,7 @@ public class CurrentSensor extends AppCompatActivity
             Toast.makeText(CurrentSensor.this, "debug: not enough blocks read for nb of samples", Toast.LENGTH_SHORT).show();
             return null;
         }
+
 
         protected void onCancelled(){
             Toast.makeText(CurrentSensor.this, "data has already been collected", Toast.LENGTH_SHORT).show();

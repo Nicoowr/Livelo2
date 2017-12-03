@@ -1,13 +1,21 @@
 package ch.livelo.livelo2;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -73,10 +81,54 @@ public class SensorMapsActivity extends FragmentActivity implements OnMapReadyCa
         // Add a marker in Sydney and move the camera
         for(Sensor sensor:sensors){
             sydney = new LatLng(sensor.getLatitude(), sensor.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title(sensor.getName()));
+            mMap.addMarker(new MarkerOptions().position(sydney).title(sensor.getId()));
         }
         if(centering){
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(sensor.getLatitude(), sensor.getLongitude()), 12.0f));
         }
+
+        // Setting a custom info window adapter for the google map
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker arg0) {
+                View v = null;
+                try {
+                    sensorDAO = new SensorDAO(SensorMapsActivity.this);
+                    sensorDAO.open();
+                    sensor = sensorDAO.getSensor(arg0.getTitle());
+                    sensorDAO.close();
+                    // Getting view from the layout file info_window_layout
+                    v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
+                    // Getting reference to the TextView to set latitude
+                    TextView tv_name = (TextView) v.findViewById(R.id.tv_name);
+                    tv_name.setText(sensor.getName());
+                    TextView tv_id = (TextView) v.findViewById(R.id.tv_id);
+                    tv_name.setText(arg0.getTitle());
+                    Button button_info_map = (Button) v.findViewById(R.id.button_info_map);
+                    LinearLayout layout_info_window = (LinearLayout) v.findViewById(R.id.layout_info_window);
+                    v.setClickable(true);
+                    GoogleMap.OnInfoWindowClickListener a = new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            Intent intent = new Intent(SensorMapsActivity.this, SensorInfoActivity.class);
+                            intent.putExtra("id", sensor.getId());
+                            startActivity(intent);
+                        }
+                    };
+                } catch (Exception ev) {
+                    System.out.print(ev.getMessage());
+                }
+
+                return v;
+            }
+        });
     }
 }

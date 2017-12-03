@@ -77,17 +77,6 @@ public class SensorInfoActivity extends AppCompatActivity {
         sensorInfoAdapter = new SensorInfoAdapter(this, android.R.layout.simple_list_item_1, sensorInfo);
         sensorInfoView.setAdapter(sensorInfoAdapter);
 
-        //Button button_map = (Button)findViewById(R.id.button_map);
-        //button_map.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        Intent intent = new Intent(SensorInfoActivity.this, SensorMapsActivity.class);
-        //        intent.putExtra("id", sensor.getId());
-        //        startActivity(intent);
-        //    }
-        //});
-
-
 
         // TextView tv_id = (TextView) findViewById(R.id.tv_id);
        // tv_id.setText(id);
@@ -138,6 +127,9 @@ public class SensorInfoActivity extends AppCompatActivity {
                 return true;
 
             case R.id.see_on_map:
+                intent = new Intent(SensorInfoActivity.this, SensorMapsActivity.class);
+                intent.putExtra("id", sensor.getId());
+                startActivity(intent);
                 return true;
 
             case R.id.view_data:
