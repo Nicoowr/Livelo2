@@ -79,7 +79,7 @@ public class CurrentSensor extends AppCompatActivity
     private int period = 0;
     private RelativeLayout layout_wait;
     private TextView tv_wait;
-    private TextView tv_email;
+    private TextView tv_debug;
     //private TextView tv_post_test;
     private ProgressDialog progressDialog;
     private String token;
@@ -105,7 +105,7 @@ public class CurrentSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
         tv_wait = (TextView) findViewById(R.id.tv_wait);
-        tv_email = (TextView) findViewById(R.id.tv_email);
+        tv_debug = (TextView) findViewById(R.id.tv_debug);
         //tv_post_test = (TextView) findViewById(R.id.tv_post_test);
 
         setSupportActionBar(toolbar);
@@ -304,6 +304,11 @@ public class CurrentSensor extends AppCompatActivity
         layout_wait.setVisibility(View.VISIBLE);
 
     }
+
+    public void goToDebug(View view) {
+        new CurrentSensor.httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", "asdfjlaksjdéfadsf");
+    }
+
     /*************************/
 
     @Override
@@ -615,9 +620,12 @@ public class CurrentSensor extends AppCompatActivity
                 sensorDAO.open();
                 List<Sensor> sensorsList = sensorDAO.getAllSensors();
 
-
+                userDAO = new UserDAO(this);
+                userDAO.open();
+                this.token = userDAO.getToken();
+                userDAO.close();
                 for (Sensor sensor:sensorsList) {
-                    sensor.send(this.token);
+                    //sensor.send(this.token);
                     Data data = new Data(sensor.getId(), this);
                     data.send(this.token, this);
                 }
@@ -843,7 +851,7 @@ public class CurrentSensor extends AppCompatActivity
         }
         @Override
         protected void onPostExecute(String result) {
-            //tv_post_test.setText(result);
+            tv_debug.setText(result);
         }
 
         @Override

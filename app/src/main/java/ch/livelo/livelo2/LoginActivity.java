@@ -350,7 +350,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 JSONObject user = new JSONObject();
                 user.put("username", mEmail);
                 user.put("password", mPassword);
-                URL url = new URL("https://beta.thinkee.ch/auth/loginuser");
+                URL url = new URL("http://alpha.thinkee.ch/auth/loginuser");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setRequestMethod("POST");

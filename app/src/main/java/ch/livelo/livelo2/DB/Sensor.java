@@ -2,6 +2,7 @@ package ch.livelo.livelo2.DB;
 
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
+import ch.livelo.livelo2.CurrentSensor;
 import ch.livelo.livelo2.ServerLivelo;
 
 /**
@@ -174,24 +177,20 @@ public class Sensor {
     public boolean send(String token){
         JSONObject postSensor = new JSONObject();
         try {
-            postSensor.put("cmd_key", "sensor");
-            // sensor info
-            postSensor.put("id", this.getId());
-            postSensor.put("depth", this.getDepth());
-            postSensor.put("lat", this.getLatitude());
-            postSensor.put("lng", this.getLongitude());
-            postSensor.put("depth", this.getDepth());
-            //postSensor.put("alt", this.getAltitude()); // or it is found on the server with altitude api
             postSensor.put("name", this.getName());
-            postSensor.put("datanb", this.dataNb);
-            //postSensor.put("run", this.isRunning());
-            //postSensor.put("period", this.getPeriod());
+            //postSensor.put("applications", "[3]");
+            postSensor.put("applications", new JSONArray().put(3));
+            postSensor.put("commands", new JSONArray().put(25));
+            postSensor.put("key", this.getId());
+            postSensor.put("modl", "http1");
+            postSensor.put("image", "");
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
 
-        new httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postSensor.toString(), token);
+        //new httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postSensor.toString(), token);
+        new httpRequest().execute("http://alpha.thinkee.ch/devices/admin/create/device", "POST", postSensor.toString(), token);
         return false;
     }
 
@@ -204,10 +203,11 @@ public class Sensor {
             try {
                 URL url = new URL(string[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("token", string[3]);
                 connection.setRequestMethod(string[1]);
                 OutputStreamWriter request = new OutputStreamWriter(connection.getOutputStream());
-                request.write(string[2] + ";" + string[3]);
+                request.write(string[2]);
                 request.flush();
                 request.close();
 
@@ -231,10 +231,28 @@ public class Sensor {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             return response;
+
+            // TODO regarder le code, 401 déconnecté
+
+            /*
+            0 valid
+            1 invalid user or password
+            2 user pas activé
+            3 mauvais mot de passe
+            4 non connecté
+            5 expired ectivation key (email de validation)
+            6 erreur interne
+
+             */
+
         }
         @Override
-        protected void onPostExecute(String result) {}
+        protected void onPostExecute(String result) {
+            //Toast.makeText(CurrentSensor.this, result, Toast.LENGTH_LONG).show();
+
+        }
 
         @Override
         protected void onPreExecute() {}

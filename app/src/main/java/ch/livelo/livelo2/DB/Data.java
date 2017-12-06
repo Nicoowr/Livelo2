@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,18 +80,19 @@ public class Data {
         call_context = context;
         JSONObject postData = new JSONObject();
         try {
-            postData.put("cmd_key", "raw_pressure");
+            postData.put("cmd_key", "press");
             // data info
             postData.put("id", sensor_id);
-            postData.put("t", this.timeStamp);
-            postData.put("val", this.values);
+            postData.put("start", this.timeStamp.get(0));
+            postData.put("stop", this.timeStamp.get(timeStamp.size()-1));
+            postData.put("data", new JSONArray(this.values));
 
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
 
-        new Data.httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postData.toString(), token);
+        new Data.httpRequest().execute("http://alpha.thinkee.ch/http/livelo", "POST", postData.toString(), token);
         return false;
     }
 
@@ -101,12 +103,14 @@ public class Data {
         protected String doInBackground(String... string) {
             String response = "";
             try {
+
                 URL url = new URL(string[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("token", string[3]);
                 connection.setRequestMethod(string[1]);
                 OutputStreamWriter request = new OutputStreamWriter(connection.getOutputStream());
-                request.write(string[2] + ";" + string[3]);
+                request.write(string[2]);
                 request.flush();
                 request.close();
 

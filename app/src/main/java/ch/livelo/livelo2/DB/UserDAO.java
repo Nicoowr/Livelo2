@@ -104,4 +104,15 @@ public class UserDAO {
             return true;
         }
     }
+
+
+
+    public String getToken() {
+        mDb = this.getDb();
+        String Query = "Select * from " + UserDB.TABLE_USER + " where " + UserDB.COLUMN_ID
+                + " = '" + "1" + "'";
+        Cursor cursor = mDb.rawQuery(Query, null);
+        cursor.moveToFirst();
+        return cursor.getString(3);
+    }
 }
