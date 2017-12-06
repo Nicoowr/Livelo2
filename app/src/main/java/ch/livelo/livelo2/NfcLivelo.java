@@ -62,14 +62,11 @@ public class NfcLivelo {
         byte id[] = {0};
 
         if (nfcv.isConnected()) {
-            try {
-                id = nfcv.transceive(new byte[]{0x00, 0x2B});
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("Command transfer","Failed");
-            }
+                id = nfcv.getTag().getId();
+                //id = nfcv.transceive(new byte[]{0x20, 0x2B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00});
+
         }
-        for (int i = id.length - 3; i > 1; i--) {//
+        for (int i = id.length-1; i > -1; i--) {//
             String hex = Integer.toHexString(0xFF & id[i]);
             if (hex.length() == 1) {//if string is empty
                 idStr.append('0');
@@ -234,19 +231,30 @@ public class NfcLivelo {
 
     public static int readNbSamples(Context context,NfcV nfcv){
         byte c[] = {0,0,0,0,0,0,0,0};
+        byte c2[] = {0,0,0,0,0,0,0,0};
         int numberSamples;
         try {
             c = nfcv.transceive(new byte[]{0x00, (byte) -64, 0x07, 0x41, 0x06}); //read block 641h from RAM
         } catch (IOException e) {
-            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error in reading number of samples", Toast.LENGTH_SHORT).show();
         }
-        int count = ((c[6] & 0xff) << 8) | (c[5] & 0xff);//Warning: order of bytes inversed!
+        int count = ((c[6] & 0xff) << 8) | (c[5] & 0xff);//Warning: order of bytes inversed! and one dummy byte
         count = (count >> 1) - 1;
         if (count < 0)
             count = 0;
 
         if(count != 0) numberSamples = count; //Stocks the nb of samples
         else numberSamples = 0;
+
+        try {
+            c2 = nfcv.transceive(new byte[]{0x00, (byte) -64, 0x07, 0x42, 0x06}); //read block 642h from RAM to know if 2nd part of FRAM is used
+        } catch (IOException e) {
+            Toast.makeText(context, "Error in reading number of samples", Toast.LENGTH_SHORT).show();
+        }
+        int count2 = ((c2[4] & 0xff) << 8) | (c2[3] & 0xff);
+        if(count2 == 81){//81 is the second part of extFRAM address
+            numberSamples += 32768;
+        }
 
         return numberSamples;
     }
@@ -259,8 +267,8 @@ public class NfcLivelo {
             e.printStackTrace();
         }
         int period = ((p[4] & 0xff) << 24) | ((p[3] & 0xff) << 16) | ((p[2] & 0xff) << 8) | (p[1] & 0xff);//Warning: order of bytes inversed!
-        float periodInMin = (float) period / 1000; //period in minutes
-        return periodInMin;
+        float periodInMs = (float) period; //period in ms
+        return periodInMs;
     }
 
     public static boolean launchSampling(int period, NfcV nfcv) {
@@ -279,7 +287,7 @@ public class NfcLivelo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        int periodInMs = period - 35; //period in ms //rajouter 60* // 15 is to compensate sampling time
+        int periodInMs = period*1000 - 10; //period in ms //rajouter 60* // 15 is to compensate sampling time
 
         byte periodInMsB[] = new byte[4];
 

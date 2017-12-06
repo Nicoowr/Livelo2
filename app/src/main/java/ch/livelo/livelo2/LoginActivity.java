@@ -48,7 +48,6 @@ import java.util.List;
 
 import ch.livelo.livelo2.DB.UserDAO;
 import ch.livelo.livelo2.DB.UserDB;
-import ch.livelo.livelo2.MySensors.MySensors;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -118,12 +117,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         UserDAO userDAO = new UserDAO(this);
         userDAO.open();
         if(userDAO.isLogged()) {
-            showProgress(true);
-            mAuthTask = new UserLoginTask(userDAO.getEmail(), userDAO.getPassword());
-            mAuthTask.execute((Void) null);
+            if(isOnline()) {
+                showProgress(true);
+                mAuthTask = new UserLoginTask(userDAO.getEmail(), userDAO.getPassword());
+                mAuthTask.execute((Void) null);
+            }else{
+                startActivity(new Intent(LoginActivity.this, CurrentSensor.class));
+            }
         }
         userDAO.close();
-
     }
 
     private void populateAutoComplete() {
@@ -415,6 +417,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 userDAO.addUser(mEmail, mPassword);
                 userDAO.updateToken(mToken);
                 userDAO.close();
+                startActivity(new Intent(LoginActivity.this, CurrentSensor.class));
                 startActivity(new Intent(LoginActivity.this, CurrentSensor.class));
                 finish();
             } else {

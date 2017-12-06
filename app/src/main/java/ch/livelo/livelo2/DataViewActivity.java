@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import java.text.DateFormat;
@@ -43,8 +46,9 @@ public class DataViewActivity extends Activity{
         Iterator timeCursor = pressureTimestamps.iterator();
         DataPoint[] dataPoints = new DataPoint[pressureData.size()];
 
-        /** Assigning dates **/
+
         if(!pressureTimestamps.isEmpty()) {
+            /** Assigning pressure (in mm)**/
             Date date0;//First point date
             Date dateEnd;//Last point date
             date0 = new Date((long) timeCursor.next());
@@ -56,27 +60,53 @@ public class DataViewActivity extends Activity{
                 dataPoints[i] = new DataPoint(date, (long) pressureCursor.next());
             }
             dateEnd = new Date((long) timeCursor.next());
-            dataPoints[dataPoints.length - 1] = new DataPoint(dateEnd, (long) pressureCursor.next());
+            dataPoints[dataPoints.length - 1] = new DataPoint(dateEnd,  (long) pressureCursor.next());
             /********************/
 
 
             GraphView graph = (GraphView) findViewById(R.id.graph);
 
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoints);
+            PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>(dataPoints);
+
+            //Points Size setting
+            series.setSize(5);
+
+
+            //Xlabel and Ylabel format
+            final SimpleDateFormat formatter = new SimpleDateFormat(
+                    "dd.MM.yyyy HH:mm");
+            graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter(){
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if (isValueX) {
+                        return formatter.format(new Date((long) value));
+                    }
+                    else {
+                        return super.formatLabel(value, isValueX) + "";
+                    }
+
+                }
+            });
+
+            //Title
+            graph.setTitle("Absolute pressure in 1/10 mBar");
+
+            //graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(DataViewActivity.this));
+            graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
+            graph.getGridLabelRenderer().setHumanRounding(false);
+
+            //Figure bounds
+            graph.getViewport().setXAxisBoundsManual(true);
+            graph.getViewport().setMinX(date0.getTime());
+            graph.getViewport().setMaxX(dateEnd.getTime());
+
+            //graph.getViewport().setYAxisBoundsManual(true);
+            //graph.getViewport().setMinY(5000);
+            //graph.getViewport().setMaxY(15000);
 
             //enabling scaling and scrolling
             graph.getViewport().setScalable(true);
             graph.getViewport().setScalableY(true);
-
-            //Xlabel format
-            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(DataViewActivity.this));
-            graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
-
-            graph.getViewport().setMinX(date0.getTime());
-            graph.getViewport().setMaxX(dateEnd.getTime());
-            graph.getViewport().setXAxisBoundsManual(true);
-
-            graph.getGridLabelRenderer().setHumanRounding(false);
 
             //Tap to get data label
             series.setOnDataPointTapListener(new OnDataPointTapListener() {
@@ -90,6 +120,7 @@ public class DataViewActivity extends Activity{
                 }
             });
             graph.addSeries(series);
+
         }else{
             Toast.makeText(DataViewActivity.this,"This sensor has no recorded data", Toast.LENGTH_SHORT).show();
         }

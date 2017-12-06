@@ -183,6 +183,7 @@ public class Sensor {
             postSensor.put("depth", this.getDepth());
             //postSensor.put("alt", this.getAltitude()); // or it is found on the server with altitude api
             postSensor.put("name", this.getName());
+            postSensor.put("datanb", this.dataNb);
             //postSensor.put("run", this.isRunning());
             //postSensor.put("period", this.getPeriod());
         } catch (JSONException e) {

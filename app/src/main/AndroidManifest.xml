@@ -57,7 +57,8 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".CurrentSensor"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".HelpActivity"
             android:label="@string/title_activity_help"
@@ -66,7 +67,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SensorInfoActivity"
-            android:parentActivityName=".CurrentSensor"
+            android:parentActivityName=".MySensors.MySensors"
             android:screenOrientation="portrait" />
         <activity
             android:name=".DataViewActivity"
@@ -80,14 +81,19 @@
             android:label="@string/title_activity_sensor_maps"></activity>
         <activity
             android:name=".LoginActivity"
-            android:label="Livelo" >
+            android:label="Livelo"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".UserActivity"></activity>
+        <activity android:name=".UserActivity"
+            android:parentActivityName=".CurrentSensor"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

@@ -232,4 +232,5 @@ public class SensorInfoActivity extends AppCompatActivity {
         intent.putExtra("id",id);
         startActivity(intent);
     }
+
 }

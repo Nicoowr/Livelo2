@@ -28,7 +28,7 @@ public class UserActivity extends AppCompatActivity {
         userDAO.logOut();
         userDAO.close();
         startActivity(new Intent(this, LoginActivity.class));
-
+        // TODO effacer aussi les capteurs et les data + preferences?
         finish();
     }
 }

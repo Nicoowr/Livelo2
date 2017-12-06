@@ -155,13 +155,15 @@ public class NewSensor extends Activity {
             Toast.makeText(NewSensor.this, "You must enter a name and a ID at least.", Toast.LENGTH_SHORT).show();
             return;
         }else if(sensorDAO.exists(sensor.getId())) {
-            sensorDAO.deleteSensor(sensor.getId());
-            Toast.makeText(NewSensor.this, "delete existing item", Toast.LENGTH_SHORT).show();
+            sensorDAO.updateSensor(sensor.getId(),Double.parseDouble(latitude_edit.getText().toString()),Double.parseDouble(longitude_edit.getText().toString()),
+                    Double.parseDouble(depth_edit.getText().toString()),-1,-1,-1);
+            //sensorDAO.deleteSensor(sensor.getId());
+            Toast.makeText(NewSensor.this, "Sensor updated", Toast.LENGTH_SHORT).show();
+        }else {
+            sensorDAO.addSensor(sensor);
+            Toast.makeText(NewSensor.this, "Sensor saved, with ID = " + sensor.getId(), Toast.LENGTH_SHORT).show();
         }
 
-
-        sensorDAO.addSensor(sensor);
-        Toast.makeText(NewSensor.this, "Sensor saved, with id= " + sensor.getId(), Toast.LENGTH_SHORT).show();
         sensorDAO.close();
         NewSensor.this.finish();
     }

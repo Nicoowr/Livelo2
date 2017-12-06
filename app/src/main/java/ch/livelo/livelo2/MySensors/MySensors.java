@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 import ch.livelo.livelo2.DB.SensorDB;
@@ -43,6 +44,7 @@ import ch.livelo.livelo2.SensorInfoActivity;
 
 public class MySensors extends AppCompatActivity {
 
+    private DataDAO dataDAO = null;
     private SensorDAO sensorDAO = null;
     private ListView sensorsView = null;
     private List<Sensor> sensorList = null;
@@ -153,15 +155,19 @@ public class MySensors extends AppCompatActivity {
 
 
             case R.id.delete_sensors:
+                dataDAO = new DataDAO(this);
+                dataDAO.open();
                 SparseBooleanArray sparseBooleanArray = sensorsView.getCheckedItemPositions();
                 long lsuppr = 0;
                 for(int i = 0; i < sparseBooleanArray.size(); i++){
                     if(sparseBooleanArray.valueAt(i)){
                         Sensor toBeDeleted = sensorAdapter.getItem(sparseBooleanArray.keyAt(i));
                         lsuppr += sensorDAO.deleteSensor(toBeDeleted.getId());
+                        dataDAO.deleteSensorData(toBeDeleted.getId());
                         sensorList.remove(toBeDeleted);
                     }
                 }
+                dataDAO.close();
 
                 //sensorAdapter.notifyDataSetChanged();
                 sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
@@ -174,6 +180,7 @@ public class MySensors extends AppCompatActivity {
                 return true;
 
             case R.id.delete_all:
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Delete this item?");
                 builder.setMessage("Are you sure?");
@@ -181,8 +188,14 @@ public class MySensors extends AppCompatActivity {
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        dataDAO = new DataDAO(MySensors.this);
+                        dataDAO.open();
+
                         long lsuppr2 = 0;
+                        long lsuppr3 = 0;
                         lsuppr2 = sensorDAO.deleteAll();
+                        lsuppr3 = dataDAO.deleteAllData();
+
                         sensorList.clear();
                         //sensorAdapter.notifyDataSetChanged();
                         sensorAdapter = new SensorAdapter(MySensors.this,android.R.layout.simple_list_item_1,sensorList);
@@ -191,10 +204,13 @@ public class MySensors extends AppCompatActivity {
                         sensorsView.setOnItemClickListener(listener);
                         SELECTION_MODE = 0;
 
+                        dataDAO.close();
                         Toast.makeText(MySensors.this, lsuppr2 +" sensors were deleted.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MySensors.this, lsuppr3 +" data were deleted.", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
+
 
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override

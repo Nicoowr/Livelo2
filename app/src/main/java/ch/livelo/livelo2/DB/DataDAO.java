@@ -178,4 +178,9 @@ public class DataDAO {
         return lsuppr;
     }
 
+    public long deleteAllData(){
+        long lsuppr = mDb.delete(DataDB.TABLE_SENSORS_DATA, null, null);
+        return lsuppr;
+    }
+
 }
