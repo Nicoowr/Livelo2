@@ -105,7 +105,7 @@ public class CurrentSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         layout_wait = (RelativeLayout) findViewById(R.id.layout_wait);
         tv_wait = (TextView) findViewById(R.id.tv_wait);
-        tv_debug = (TextView) findViewById(R.id.tv_debug);
+        //tv_debug = (TextView) findViewById(R.id.tv_debug);
         //tv_post_test = (TextView) findViewById(R.id.tv_post_test);
 
         setSupportActionBar(toolbar);

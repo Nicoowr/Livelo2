@@ -3,20 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_info_window"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="300dip"
+    android:layout_height="140dip"
     android:orientation="horizontal"
     android:paddingBottom="25dip"
     android:paddingLeft="10dip"
     android:paddingRight="20dip"
     android:paddingTop="5dip">
-
-    <ImageView
-        android:id="@+id/clientPic"
-        android:layout_width="60dip"
-        android:layout_height="60dip"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="8dip" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -26,15 +19,17 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="25dip"
-                android:layout_height="25dip"
-                android:layout_marginLeft="5dip" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Name: " />
 
             <TextView
                 android:id="@+id/tv_name"
@@ -48,18 +43,44 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="25dip"
-                android:layout_height="25dip"
-                android:layout_marginLeft="5dip" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ID: " />
 
             <TextView
                 android:id="@+id/tv_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="+91-98XXXXX200"
+                android:textColor="#000000"
+                android:textSize="10dip" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="111dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Depth: " />
+
+            <TextView
+                android:id="@+id/tv_depth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -77,11 +98,22 @@
 
         </LinearLayout>
 
+        <!--Button
+            android:id="@+id/button_info_map"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:text="Info" /-->
         <Button
             android:id="@+id/button_info_map"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Info" />
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/get_info_sized"
+            android:text="@string/get_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="16dp" />
+
 
     </LinearLayout>
 

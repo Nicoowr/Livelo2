@@ -1,22 +1,75 @@
 package ch.livelo.livelo2;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
+import android.location.Location;
+import android.media.Image;
 import android.net.Uri;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.dynamic.IObjectWrapper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.internal.IGoogleMapDelegate;
+import com.google.android.gms.maps.internal.ILocationSourceDelegate;
+import com.google.android.gms.maps.internal.IProjectionDelegate;
+import com.google.android.gms.maps.internal.IUiSettingsDelegate;
+import com.google.android.gms.maps.internal.zzab;
+import com.google.android.gms.maps.internal.zzad;
+import com.google.android.gms.maps.internal.zzaf;
+import com.google.android.gms.maps.internal.zzaj;
+import com.google.android.gms.maps.internal.zzal;
+import com.google.android.gms.maps.internal.zzan;
+import com.google.android.gms.maps.internal.zzap;
+import com.google.android.gms.maps.internal.zzar;
+import com.google.android.gms.maps.internal.zzat;
+import com.google.android.gms.maps.internal.zzav;
+import com.google.android.gms.maps.internal.zzax;
+import com.google.android.gms.maps.internal.zzaz;
+import com.google.android.gms.maps.internal.zzbb;
+import com.google.android.gms.maps.internal.zzbd;
+import com.google.android.gms.maps.internal.zzbf;
+import com.google.android.gms.maps.internal.zzbs;
+import com.google.android.gms.maps.internal.zzc;
+import com.google.android.gms.maps.internal.zzh;
+import com.google.android.gms.maps.internal.zzl;
+import com.google.android.gms.maps.internal.zzn;
+import com.google.android.gms.maps.internal.zzr;
+import com.google.android.gms.maps.internal.zzt;
+import com.google.android.gms.maps.internal.zzv;
+import com.google.android.gms.maps.internal.zzx;
+import com.google.android.gms.maps.internal.zzz;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.internal.IPolylineDelegate;
+import com.google.android.gms.maps.model.internal.zzd;
+import com.google.android.gms.maps.model.internal.zzg;
+import com.google.android.gms.maps.model.internal.zzj;
+import com.google.android.gms.maps.model.internal.zzp;
+import com.google.android.gms.maps.model.internal.zzs;
+import com.google.android.gms.maps.model.internal.zzw;
 
 import java.util.List;
 
@@ -24,17 +77,16 @@ import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
 
+import static java.lang.String.valueOf;
+
 /**
  *
  * TODO prendre l'id, mettre la camera dessus et le selectionner si possible
- * TODO si pas d'id, centrer sur le GPS
- * TODO mettre un marker pour chaque capteur dans la database
- * TODO onClick sur chaque marker (soit direct sur sensor info soit un petit menu qui propose sensor info)
- *
+ * TODO si pas d'id, centrer sur le GPS*
  *
  */
 
-public class SensorMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class SensorMapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private String id;
@@ -109,20 +161,47 @@ public class SensorMapsActivity extends FragmentActivity implements OnMapReadyCa
                     v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
                     // Getting reference to the TextView to set latitude
                     TextView tv_name = (TextView) v.findViewById(R.id.tv_name);
-                    tv_name.setText(sensor.getName());
                     TextView tv_id = (TextView) v.findViewById(R.id.tv_id);
-                    tv_name.setText(arg0.getTitle());
-                    Button button_info_map = (Button) v.findViewById(R.id.button_info_map);
-                    LinearLayout layout_info_window = (LinearLayout) v.findViewById(R.id.layout_info_window);
+                    TextView tv_depth = (TextView) v.findViewById(R.id.tv_depth);
+                    tv_name.setText(sensor.getName());
+                    tv_id.setText(arg0.getTitle());
+                    tv_depth.setText(valueOf(sensor.getDepth()).toString() + " m");
+
+                    /*Drawable get_info = getResources().getDrawable(R.drawable.get_info_sized);
+                    get_info.setBounds(0, 0, (int)(get_info.getIntrinsicWidth()*0.5),(int)(get_info.getIntrinsicHeight()*0.5));
+                    ScaleDrawable sd1 = new ScaleDrawable(get_info, 0, 30, 30);
+                    Button button_info_map = (Button) findViewById(R.id.button_info_map);
+                    button_info_map.setCompoundDrawables(sd1.getDrawable(), null, null, null);*/
                     v.setClickable(true);
-                    GoogleMap.OnInfoWindowClickListener a = new GoogleMap.OnInfoWindowClickListener() {
+
+                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
+                            sensorDAO = new SensorDAO(SensorMapsActivity.this);
+                            sensorDAO.open();
+                            sensor = sensorDAO.getSensor(marker.getTitle());
+                            sensorDAO.close();
+
                             Intent intent = new Intent(SensorMapsActivity.this, SensorInfoActivity.class);
                             intent.putExtra("id", sensor.getId());
                             startActivity(intent);
                         }
-                    };
+                    });
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            sensorDAO = new SensorDAO(SensorMapsActivity.this);
+                            sensorDAO.open();
+                            sensor = sensorDAO.getSensor(marker.getTitle());
+                            sensorDAO.close();
+
+                            Intent intent = new Intent(SensorMapsActivity.this, SensorInfoActivity.class);
+                            intent.putExtra("id", sensor.getId());
+                            startActivity(intent);
+
+                            return false;
+                        }
+                    });
                 } catch (Exception ev) {
                     System.out.print(ev.getMessage());
                 }
@@ -130,5 +209,19 @@ public class SensorMapsActivity extends FragmentActivity implements OnMapReadyCa
                 return v;
             }
         });
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        sensorDAO = new SensorDAO(SensorMapsActivity.this);
+        sensorDAO.open();
+        sensor = sensorDAO.getSensor(marker.getTitle());
+        sensorDAO.close();
+
+        Intent intent = new Intent(SensorMapsActivity.this, SensorInfoActivity.class);
+        intent.putExtra("id", sensor.getId());
+        startActivity(intent);
+
+        return false;
     }
 }
