@@ -156,7 +156,7 @@ public class NewSensor extends Activity {
             return;
         }else if(sensorDAO.exists(sensor.getId())) {
             sensorDAO.updateSensor(sensor.getId(),Double.parseDouble(latitude_edit.getText().toString()),Double.parseDouble(longitude_edit.getText().toString()),
-                    Double.parseDouble(depth_edit.getText().toString()),-1,-1,-1);
+                    Double.parseDouble(depth_edit.getText().toString()),-1,-1,-1,-1);
             //sensorDAO.deleteSensor(sensor.getId());
             Toast.makeText(NewSensor.this, "Sensor updated", Toast.LENGTH_SHORT).show();
         }else {

@@ -399,7 +399,7 @@ public class CurrentSensor extends AppCompatActivity
                         e.printStackTrace();
                     }
                     return;
-                };
+                }
 
                 sensorDAO = new SensorDAO(this);
                 sensorDAO.open();
@@ -435,7 +435,8 @@ public class CurrentSensor extends AppCompatActivity
                     return;
                 }
                 if (NfcLivelo.launchSampling(period, nfcv)) {
-                    sensorDAO.updateSensor(id, -1, -1, -1, period, -1, -1);
+
+                    sensorDAO.updateSensor(id, -1, -1, -1, period, System.currentTimeMillis(), -1, -1);
                     Toast.makeText(getBaseContext(), "Sampling launched every " + period + " seconds", Toast.LENGTH_SHORT).show();
                 }
                 else Toast.makeText(getBaseContext(), "Error: sampling not launched", Toast.LENGTH_SHORT).show();
@@ -771,8 +772,16 @@ public class CurrentSensor extends AppCompatActivity
             progressDialog.setMessage("saving data");
             List<Long> timeStamp = new ArrayList();
 
-            for(int k = numberSamples; k>0; k--){
-                timeStamp.add(now - (long)((float)k*period));
+            sensorDAO = new SensorDAO(CurrentSensor.this);
+            sensorDAO.open();
+            long lastStart = sensorDAO.getSensor(id).getLastStart();
+            sensorDAO.close();
+
+            //for(int k = numberSamples; k>0; k--){
+            //    timeStamp.add(now - (long)((float)k*period));
+            //}
+            for(int k = 0; k<numberSamples; k++){
+                timeStamp.add(lastStart + (long)((now-lastStart)*(float)k/(float)numberSamples));
             }
 
             values = values.subList(0, numberSamples);
@@ -790,7 +799,7 @@ public class CurrentSensor extends AppCompatActivity
 
             sensorDAO = new SensorDAO(CurrentSensor.this);
             sensorDAO.open();
-            sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, numberSamples, now);
+            sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, 0, numberSamples, now);
             sensorDAO.close();
 
             NfcLivelo.resetController(nfcv);

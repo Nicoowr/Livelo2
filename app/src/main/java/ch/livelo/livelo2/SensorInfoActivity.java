@@ -148,7 +148,7 @@ public class SensorInfoActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         long deletedData = dataDAO.deleteSensorData(sensor.getId());
-                        sensorDAO.updateSensor(sensor.getId(),-1, -1, -1 ,-1 , 0, -1);
+                        sensorDAO.updateSensor(sensor.getId(),-1, -1, -1 ,-1 , -1, 0, -1);
                         Toast.makeText(SensorInfoActivity.this,"" + deletedData + " erased from sensor " + sensor.getName(), Toast.LENGTH_SHORT).show();
                         SensorInfoActivity.this.finish();
                     }
@@ -211,7 +211,7 @@ public class SensorInfoActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 long deletedData = dataDAO.deleteSensorData(sensor.getId());
-                sensorDAO.updateSensor(sensor.getId(),-1, -1, -1 ,-1 , 0, -1);
+                sensorDAO.updateSensor(sensor.getId(),-1, -1, -1 ,-1 , -1, 0, -1);
                 Toast.makeText(SensorInfoActivity.this,"" + deletedData + " erased from sensor " + sensor.getName(), Toast.LENGTH_SHORT).show();
                 SensorInfoActivity.this.finish();
             }

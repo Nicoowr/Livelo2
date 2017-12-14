@@ -50,7 +50,7 @@ public class SensorDAO {
         values.put(SensorDB.COLUMN_LATITUDE, latitude);
         values.put(SensorDB.COLUMN_LONGITUDE, longitude);
         values.put(SensorDB.COLUMN_DEPTH, depth);
-        values.put(SensorDB.COLUMN_FREQUENCY, 0);
+        values.put(SensorDB.COLUMN_PERIOD, 0);
         values.put(SensorDB.COLUMN_DATANB, 0);
         values.put(SensorDB.COLUMN_LASTCOLLECT, 0);
         long insertId = mDb.insert(SensorDB.TABLE_SENSORS, null,
@@ -71,7 +71,8 @@ public class SensorDAO {
         values.put(SensorDB.COLUMN_LATITUDE, sensor.getLatitude());
         values.put(SensorDB.COLUMN_LONGITUDE, sensor.getLongitude());
         values.put(SensorDB.COLUMN_DEPTH, sensor.getDepth());
-        values.put(SensorDB.COLUMN_FREQUENCY, 0);
+        values.put(SensorDB.COLUMN_PERIOD, 0);
+        values.put(SensorDB.COLUMN_LASTSTART, 0);
         values.put(SensorDB.COLUMN_DATANB, 0);
         values.put(SensorDB.COLUMN_LASTCOLLECT, 0);
         long insertId = mDb.insert(SensorDB.TABLE_SENSORS, null,
@@ -85,7 +86,7 @@ public class SensorDAO {
         return;
     }
 
-    public void updateSensor(String sensor_id, double latitude, double longitude, double depth, double frequency, long dataNb, long lastCollect){
+    public void updateSensor(String sensor_id, double latitude, double longitude, double depth, double period, long lastStart, long dataNb, long lastCollect){
         //-1 means no change
         Sensor sensor = this.getSensor(sensor_id);
         ContentValues cv = new ContentValues();
@@ -95,8 +96,10 @@ public class SensorDAO {
             cv.put(SensorDB.COLUMN_LONGITUDE, longitude);
         if(depth != -1)
             cv.put(SensorDB.COLUMN_DEPTH, depth);
-        if(frequency != -1)
-            cv.put(SensorDB.COLUMN_FREQUENCY,frequency);
+        if(period != -1)
+            cv.put(SensorDB.COLUMN_PERIOD,period);
+        if(lastStart != -1)
+            cv.put(SensorDB.COLUMN_LASTSTART,lastStart);
         if(dataNb != -1)
             cv.put(SensorDB.COLUMN_DATANB,dataNb + sensor.getDataNb());
         if(dataNb == 0)
@@ -157,9 +160,10 @@ public class SensorDAO {
         sensor.setLatitude(cursor.getDouble(3));
         sensor.setLongitude(cursor.getDouble(4));
         sensor.setDepth(cursor.getDouble(5));
-        sensor.setFrequency(cursor.getDouble(6));
-        sensor.setDataNb(cursor.getLong(7));
-        sensor.setLastCollect(cursor.getLong(8));
+        sensor.setPeriod(cursor.getDouble(6));
+        sensor.setLastStart(cursor.getLong(7));
+        sensor.setDataNb(cursor.getLong(8));
+        sensor.setLastCollect(cursor.getLong(9));
         return sensor;
     }
 

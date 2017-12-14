@@ -46,9 +46,10 @@ public class Sensor {
     private double latitude = 0;
     private double longitude = 0;
     private double depth = 0;
-    private double frequency = 0;
+    private double period = 0;
     private long dataNb = 0;
     private long lastCollect = 0;
+    private long lastStart = 0;
 
     //////////////////////Constructors///////////////////
     public Sensor(){
@@ -99,8 +100,8 @@ public class Sensor {
         this.depth = depth;
     }
 
-    public void setFrequency(double frequency){
-        this.frequency = frequency;
+    public void setPeriod(double period){
+        this.period = period;
     }
 
     public void setDataNb(long dataNb){
@@ -109,6 +110,10 @@ public class Sensor {
 
     public void setLastCollect(long lastCollect){
         this.lastCollect = lastCollect;
+    }
+
+    public void setLastStart(long lastStart) {
+        this.lastStart = lastStart;
     }
 
     public String getName(){
@@ -136,8 +141,12 @@ public class Sensor {
         return position;
     }
 
-    public double getFrequency(){
-        return this.frequency;
+    public long getLastStart() {
+        return lastStart;
+    }
+
+    public double getPeriod(){
+        return this.period;
     }
 
     public long getDataNb(){
@@ -154,7 +163,7 @@ public class Sensor {
         String lastCollectDate = df.format(toDate);
 
         return new String[]{this.name, this.sensor_id, String.valueOf(this.latitude), String.valueOf(this.longitude),
-                String.valueOf(this.depth), String.valueOf(this.frequency), String.valueOf(this.dataNb),
+                String.valueOf(this.depth), String.valueOf(this.period), String.valueOf(this.dataNb),
                 String.valueOf(lastCollectDate)};
     }
 

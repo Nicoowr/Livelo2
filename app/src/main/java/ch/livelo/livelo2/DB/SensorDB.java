@@ -20,13 +20,14 @@ public class SensorDB extends SQLiteOpenHelper {
     public static final String COLUMN_LATITUDE = "Latitude";
     public static final String COLUMN_LONGITUDE = "Longitude";
     public static final String COLUMN_DEPTH = "Depth";
-    public static final String COLUMN_FREQUENCY = "Period";
+    public static final String COLUMN_PERIOD = "Period";
+    public static final String COLUMN_LASTSTART = "laststart";
     public static final String COLUMN_DATANB = "datanb";
     public static final String COLUMN_LASTCOLLECT = "lastcollect";
 
     public static String[] allColumns = { COLUMN_ID, COLUMN_NAME,
             COLUMN_SENSOR_ID, COLUMN_LATITUDE, COLUMN_LONGITUDE,
-            COLUMN_DEPTH, COLUMN_FREQUENCY, COLUMN_DATANB, COLUMN_LASTCOLLECT};
+            COLUMN_DEPTH, COLUMN_PERIOD, COLUMN_LASTSTART, COLUMN_DATANB, COLUMN_LASTCOLLECT};
 
     //Other info
     protected static final String DATABASE_NAME = "sensors.db";
@@ -34,10 +35,16 @@ public class SensorDB extends SQLiteOpenHelper {
 
     //Create table
     protected static final String DATABASE_CREATE = "create table "
-            + TABLE_SENSORS + "(" + COLUMN_ID
-            + " integer primary key autoincrement, " + COLUMN_NAME + " TEXT, "
-            + COLUMN_SENSOR_ID + " TEXT, " + COLUMN_LATITUDE + " REAL, " + COLUMN_LONGITUDE + " REAL,"
-            + COLUMN_DEPTH + " REAL, " + COLUMN_FREQUENCY + " REAL, " + COLUMN_DATANB + " INTEGER, "
+            + TABLE_SENSORS + "("
+            + COLUMN_ID + " integer primary key autoincrement, "
+            + COLUMN_NAME + " TEXT, "
+            + COLUMN_SENSOR_ID + " TEXT, "
+            + COLUMN_LATITUDE + " REAL, "
+            + COLUMN_LONGITUDE + " REAL,"
+            + COLUMN_DEPTH + " REAL, "
+            + COLUMN_PERIOD + " REAL, "
+            + COLUMN_LASTSTART + " REAL, "
+            + COLUMN_DATANB + " INTEGER, "
             + COLUMN_LASTCOLLECT + " INTEGER);";
 
     public SensorDB(Context context){
