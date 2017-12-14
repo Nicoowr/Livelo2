@@ -1,12 +1,9 @@
 package ch.livelo.livelo2;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,13 +17,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.NotificationCompat;
 import android.text.InputType;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,7 +30,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -245,7 +236,8 @@ public class CurrentSensor extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         period = Integer.valueOf(edit_period.getText().toString());
                         action = Action.LAUNCH;
-                        tv_wait.setText(R.string.connect_launch + period + " seconds");
+                        String launchsampling_string = getString(R.string.connect_launch) + period + " seconds";
+                        tv_wait.setText(launchsampling_string);
 
                         if (enableNfc()) layout_wait.setVisibility(View.VISIBLE);
                         dialog.dismiss();
@@ -500,13 +492,13 @@ public class CurrentSensor extends AppCompatActivity
                 break;
 
             case RESET:
-                NfcLivelo.resetController(nfcv);
+                NfcLivelo.resetCollect(nfcv);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                NfcLivelo.reset(nfcv);
+                NfcLivelo.resetWrite(nfcv);
                 Toast.makeText(getBaseContext(), "Reset sent", Toast.LENGTH_LONG).show();
                 try {
                     nfcv.close();
@@ -626,7 +618,7 @@ public class CurrentSensor extends AppCompatActivity
                 this.token = userDAO.getToken();
                 userDAO.close();
                 for (Sensor sensor:sensorsList) {
-                    //sensor.send(this.token);
+                    sensor.send(this.token);
                     Data data = new Data(sensor.getId(), this);
                     data.send(this.token, this);
                 }
@@ -668,7 +660,7 @@ public class CurrentSensor extends AppCompatActivity
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDialog.show();
 
-                NfcLivelo.reset(nfcv);
+                NfcLivelo.resetCollect(nfcv);
 
                 try {
                     Thread.sleep(100);
@@ -802,7 +794,7 @@ public class CurrentSensor extends AppCompatActivity
             sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, 0, numberSamples, now);
             sensorDAO.close();
 
-            NfcLivelo.resetController(nfcv);
+            NfcLivelo.resetCollect(nfcv);
 
             try {
                 Thread.sleep(100);
@@ -810,7 +802,7 @@ public class CurrentSensor extends AppCompatActivity
                 e.printStackTrace();
             }
 
-            NfcLivelo.reset(nfcv);
+            NfcLivelo.resetWrite(nfcv);
             try {
                 nfcv.close();
             } catch (IOException e) {e.printStackTrace();}

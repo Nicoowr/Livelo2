@@ -1,46 +1,18 @@
 package ch.livelo.livelo2;
 
-import android.app.Application;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcV;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.livelo.livelo2.DB.Data;
 import ch.livelo.livelo2.DB.DataDAO;
-import ch.livelo.livelo2.DB.DataDB;
 import ch.livelo.livelo2.DB.SensorDAO;
-import ch.livelo.livelo2.DB.SensorDB;
 
 import static java.lang.StrictMath.round;
 
@@ -272,7 +244,7 @@ public class NfcLivelo {
     }
 
     public static boolean launchSampling(int period, NfcV nfcv) {
-        resetController(nfcv);
+        resetCollect(nfcv);
 
         try {
             Thread.sleep(100);
@@ -280,7 +252,7 @@ public class NfcLivelo {
             e.printStackTrace();
         }
 
-        reset(nfcv);
+        resetWrite(nfcv);
 
         try {
             Thread.sleep(10);
@@ -345,15 +317,15 @@ public class NfcLivelo {
         }
 
         //FIXME
-        if((samplingIsLaunched[3] & (byte)16)== (1 << 4))
+        //if((samplingIsLaunched[3] & (byte)16)== (1 << 4))
             return true;
-        else
-            return false;
+        //else
+        //    return false;
 
     }
 
-
-    public static void reset(NfcV nfcv) {
+    //Reset Collect (allows to redo a collect if last failed)
+    public static void resetWrite(NfcV nfcv) {
         final byte readCommand[] = new byte[]{0x00, 0x21, (byte) 0, 0x01, 0x00, 0x40, 0x03, 0x01, 0x01, 0x00, 0x00};
         try {
             nfcv.transceive(readCommand);
@@ -362,7 +334,8 @@ public class NfcLivelo {
         }
     }
 
-    public static void resetController(NfcV nfcv) {
+    //Reset Write (including number of samples), called by watchdog
+    public static void resetCollect(NfcV nfcv) {
         final byte readCommand[] = new byte[]{
                 0x00,
                 0x21,

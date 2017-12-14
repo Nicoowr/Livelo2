@@ -91,9 +91,7 @@ public class DataViewActivity extends Activity{
             //Title
             graph.setTitle("Absolute pressure in 1/10 mBar");
 
-            //graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(DataViewActivity.this));
-            graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
-            graph.getGridLabelRenderer().setHumanRounding(false);
+
 
             //Figure bounds
             graph.getViewport().setXAxisBoundsManual(true);
@@ -107,6 +105,10 @@ public class DataViewActivity extends Activity{
             //enabling scaling and scrolling
             graph.getViewport().setScalable(true);
             graph.getViewport().setScalableY(true);
+
+            graph.getGridLabelRenderer().setNumVerticalLabels(5); // display 5 ylabels
+            graph.getGridLabelRenderer().setNumHorizontalLabels(2); // only 3 because of the space
+            //graph.getGridLabelRenderer().setHumanRounding(false);
 
             //Tap to get data label
             series.setOnDataPointTapListener(new OnDataPointTapListener() {
