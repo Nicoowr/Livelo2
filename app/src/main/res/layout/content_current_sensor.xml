@@ -36,17 +36,17 @@
             tools:layout_editor_absoluteY="16dp" />
 
         <Button
-            android:id="@+id/button_collect"
+            android:id="@+id/button_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:drawableLeft="@drawable/collect_sized"
-            android:onClick="goToCollect"
-            android:text="@string/collect_data"
+            android:drawableLeft="@drawable/new_sensor_sized"
+            android:onClick="goToNew"
+            android:text="@string/new_sensor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_info" />
+            app:layout_constraintTop_toBottomOf="@+id/button_launch" />
 
         <Button
             android:id="@+id/button_launch"
@@ -62,17 +62,17 @@
             app:layout_constraintTop_toBottomOf="@+id/button_collect" />
 
         <Button
-            android:id="@+id/button_new"
+            android:id="@+id/button_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:drawableLeft="@drawable/new_sensor_sized"
-            android:onClick="goToNew"
-            android:text="@string/new_sensor"
+            android:drawableLeft="@drawable/collect_sized"
+            android:onClick="goToCollect"
+            android:text="@string/collect_data"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_launch" />
+            app:layout_constraintTop_toBottomOf="@+id/button_info" />
 
         <Button
             android:id="@+id/button_reset"

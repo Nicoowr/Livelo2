@@ -259,7 +259,7 @@ public class NfcLivelo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        int periodInMs = period*1000 - 10; //period in ms //rajouter 60* // 15 is to compensate sampling time
+        int periodInMs = period - 10; //period in ms //rajouter 60* // 15 is to compensate sampling time
 
         byte periodInMsB[] = new byte[4];
 

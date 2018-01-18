@@ -429,7 +429,7 @@ public class CurrentSensor extends AppCompatActivity
                 if (NfcLivelo.launchSampling(period, nfcv)) {
 
                     sensorDAO.updateSensor(id, -1, -1, -1, period, System.currentTimeMillis(), -1, -1);
-                    Toast.makeText(getBaseContext(), "Sampling launched every " + period + " seconds", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Sampling launched every " + period + " milliseconds", Toast.LENGTH_SHORT).show();
                 }
                 else Toast.makeText(getBaseContext(), "Error: sampling not launched", Toast.LENGTH_SHORT).show();
                 sensorDAO.close();
