@@ -185,11 +185,11 @@ public class Sensor {
 
     public boolean send(String token){
         JSONObject postSensor = new JSONObject();
+        //JSONArray array_cmd = new
         try {
             postSensor.put("name", this.getName());
-            //postSensor.put("applications", "[3]");
             postSensor.put("applications", new JSONArray().put(3));
-            postSensor.put("commands", new JSONArray().put(25));
+            postSensor.put("commands", new JSONArray().put(1));
             postSensor.put("key", this.getId());
             postSensor.put("modl", "http1");
             postSensor.put("image", "");
@@ -199,7 +199,7 @@ public class Sensor {
         }
 
         //new httpRequest().execute("http://posttestserver.com/post.php?dir=livelo", "POST", postSensor.toString(), token);
-        new httpRequest().execute("http://alpha.thinkee.ch/devices/admin/create/device", "POST", postSensor.toString(), token);
+        new httpRequest().execute("https://alpha.thinkee.ch/devices/admin/create/device", "POST", postSensor.toString(), token);
         return false;
     }
 

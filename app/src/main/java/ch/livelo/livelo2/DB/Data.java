@@ -92,7 +92,7 @@ public class Data {
             return false;
         }
 
-        new Data.httpRequest().execute("http://alpha.thinkee.ch/http/livelo", "POST", postData.toString(), token);
+        new Data.httpRequest().execute("https://alpha.thinkee.ch/http/livelo", "POST", postData.toString(), token);
         return false;
     }
 
