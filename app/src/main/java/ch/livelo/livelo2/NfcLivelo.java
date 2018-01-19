@@ -208,6 +208,7 @@ public class NfcLivelo {
         try {
             c = nfcv.transceive(new byte[]{0x00, (byte) -64, 0x07, 0x41, 0x06}); //read block 641h from RAM
         } catch (IOException e) {
+            e.printStackTrace();
             Toast.makeText(context, "Error in reading number of samples", Toast.LENGTH_SHORT).show();
         }
         int count = ((c[6] & 0xff) << 8) | (c[5] & 0xff);//Warning: order of bytes inversed! and one dummy byte
@@ -259,7 +260,7 @@ public class NfcLivelo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        int periodInMs = period - 10; //period in ms //rajouter 60* // 15 is to compensate sampling time
+        int periodInMs = period*1000; //period in s //rajouter 60* // 15 is to compensate sampling time
 
         byte periodInMsB[] = new byte[4];
 

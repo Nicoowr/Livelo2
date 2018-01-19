@@ -102,7 +102,7 @@ public class CurrentSensor extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         /***** Button shape ****/
-        shapeButtons();
+        //shapeButtons();
         /***********************/
 
 
@@ -216,7 +216,7 @@ public class CurrentSensor extends AppCompatActivity
             return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Sampling  period [ms]");
+        builder.setMessage("Sampling  period [s]");
         //final LinearLayout dialogLayout = new LinearLayout(this);
         final EditText edit_period = new EditText(this);
         edit_period.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -384,7 +384,7 @@ public class CurrentSensor extends AppCompatActivity
 
             case LAUNCH:
                 if(NfcLivelo.readNbSamples(this, nfcv) !=0){
-                    Toast.makeText(getBaseContext(), "sensor already sampling, collect or reset_logo it before", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "sensor already sampling, collect or reset it before", Toast.LENGTH_LONG).show();
                     try {
                         nfcv.close();
                     } catch (IOException e) {
@@ -429,7 +429,7 @@ public class CurrentSensor extends AppCompatActivity
                 if (NfcLivelo.launchSampling(period, nfcv)) {
 
                     sensorDAO.updateSensor(id, -1, -1, -1, period, System.currentTimeMillis(), -1, -1);
-                    Toast.makeText(getBaseContext(), "Sampling launched every " + period + " milliseconds", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Sampling launched every " + period + " seconds", Toast.LENGTH_SHORT).show();
                 }
                 else Toast.makeText(getBaseContext(), "Error: sampling not launched", Toast.LENGTH_SHORT).show();
                 sensorDAO.close();

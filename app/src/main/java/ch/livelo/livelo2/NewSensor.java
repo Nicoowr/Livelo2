@@ -152,7 +152,7 @@ public class NewSensor extends Activity {
         fillSensor();
         sensorDAO.open();
         if(sensor.getName().isEmpty() || sensor.getId().isEmpty()){
-            Toast.makeText(NewSensor.this, "You must enter a name and a ID at least.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(NewSensor.this, "You must enter a name and an ID at least.", Toast.LENGTH_SHORT).show();
             return;
         }else if(sensorDAO.exists(sensor.getId())) {
             sensorDAO.updateSensor(sensor.getId(),Double.parseDouble(latitude_edit.getText().toString()),Double.parseDouble(longitude_edit.getText().toString()),

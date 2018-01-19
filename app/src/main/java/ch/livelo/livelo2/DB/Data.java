@@ -84,6 +84,7 @@ public class Data {
             // data info
             postData.put("id", sensor_id);
             postData.put("start", this.timeStamp.get(0));
+            //FIXME: do not take the first timestamp
             postData.put("stop", this.timeStamp.get(timeStamp.size()-1));
             postData.put("data", new JSONArray(this.values));
 
