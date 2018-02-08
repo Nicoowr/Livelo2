@@ -161,7 +161,7 @@ public class MySensors extends AppCompatActivity {
                 long lsuppr = 0;
                 for(int i = 0; i < sparseBooleanArray.size(); i++){
                     if(sparseBooleanArray.valueAt(i)){
-                        Sensor toBeDeleted = sensorAdapter.getItem(sparseBooleanArray.keyAt(i));
+                        Sensor toBeDeleted = sensorAdapter.getItem(0);//sparseBooleanArray.keyAt(i)
                         lsuppr += sensorDAO.deleteSensor(toBeDeleted.getId());
                         dataDAO.deleteSensorData(toBeDeleted.getId());
                         sensorList.remove(toBeDeleted);

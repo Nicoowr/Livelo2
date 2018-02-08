@@ -2,36 +2,22 @@ package ch.livelo.livelo2;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.lang.reflect.Field;
 import java.util.List;
 
 import ch.livelo.livelo2.DB.DataDAO;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
-import ch.livelo.livelo2.MySensors.MySensors;
-import ch.livelo.livelo2.MySensors.SensorAdapter;
 
 /**
  *
@@ -148,7 +134,7 @@ public class SensorInfoActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         long deletedData = dataDAO.deleteSensorData(sensor.getId());
-                        sensorDAO.updateSensor(sensor.getId(),-1, -1, -1 ,-1 , -1, 0, -1);
+                        sensorDAO.updateSensor(sensor.getId(), "null", -1, -1, -1 ,-1 , -1, 0, -1, -1);
                         Toast.makeText(SensorInfoActivity.this,"" + deletedData + " erased from sensor " + sensor.getName(), Toast.LENGTH_SHORT).show();
                         SensorInfoActivity.this.finish();
                     }
@@ -211,7 +197,7 @@ public class SensorInfoActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 long deletedData = dataDAO.deleteSensorData(sensor.getId());
-                sensorDAO.updateSensor(sensor.getId(),-1, -1, -1 ,-1 , -1, 0, -1);
+                sensorDAO.updateSensor(sensor.getId(), "null", -1, -1, -1 ,-1 , -1, 0, -1, -1);
                 Toast.makeText(SensorInfoActivity.this,"" + deletedData + " erased from sensor " + sensor.getName(), Toast.LENGTH_SHORT).show();
                 SensorInfoActivity.this.finish();
             }

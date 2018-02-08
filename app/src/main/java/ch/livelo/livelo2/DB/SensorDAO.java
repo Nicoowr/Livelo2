@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,10 +85,12 @@ public class SensorDAO {
         return;
     }
 
-    public void updateSensor(String sensor_id, double latitude, double longitude, double depth, double period, long lastStart, long dataNb, long lastCollect){
+    public void updateSensor(String sensor_id, String name, double latitude, double longitude, double depth, double period, long lastStart, long dataNb, long lastCollect, long lastCollectDataNb){
         //-1 means no change
         Sensor sensor = this.getSensor(sensor_id);
         ContentValues cv = new ContentValues();
+        if(!name.equals("null"))
+            cv.put(SensorDB.COLUMN_NAME, name);
         if(latitude != -1)
             cv.put(SensorDB.COLUMN_LATITUDE, latitude);
         if(longitude != -1)
@@ -106,6 +107,8 @@ public class SensorDAO {
             cv.put(SensorDB.COLUMN_DATANB,dataNb);//Case where you reinitialize
         if(lastCollect != -1)
             cv.put(SensorDB.COLUMN_LASTCOLLECT,lastCollect);
+        if(lastCollectDataNb != -1)
+            cv.put(SensorDB.COLUMN_LASTCOLLECTDATANB,lastCollectDataNb);
 
         mDb.update(SensorDB.TABLE_SENSORS, cv, SensorDB.COLUMN_SENSOR_ID + "='"+sensor_id + "'", null);
 
@@ -164,6 +167,7 @@ public class SensorDAO {
         sensor.setLastStart(cursor.getLong(7));
         sensor.setDataNb(cursor.getLong(8));
         sensor.setLastCollect(cursor.getLong(9));
+        sensor.setLastCollectDataNb(cursor.getLong(10));
         return sensor;
     }
 

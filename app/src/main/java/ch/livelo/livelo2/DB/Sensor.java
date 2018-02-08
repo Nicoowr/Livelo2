@@ -50,6 +50,7 @@ public class Sensor {
     private long dataNb = 0;
     private long lastCollect = 0;
     private long lastStart = 0;
+    private long lastCollectDataNb = 0;
 
     //////////////////////Constructors///////////////////
     public Sensor(){
@@ -116,6 +117,10 @@ public class Sensor {
         this.lastStart = lastStart;
     }
 
+    public void setLastCollectDataNb(long lastCollectDataNb){
+        this.lastCollectDataNb = lastCollectDataNb;
+    }
+
     public String getName(){
         return this.name;
     }
@@ -157,6 +162,10 @@ public class Sensor {
         return this.lastCollect;
     }
 
+    public long getLastCollectDataNb(){
+        return this.lastCollectDataNb;
+    }
+
     public String[] getArrayInfo(){
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         Date toDate = new Date(this.lastCollect);
@@ -164,7 +173,7 @@ public class Sensor {
 
         return new String[]{this.name, this.sensor_id, String.valueOf(this.latitude), String.valueOf(this.longitude),
                 String.valueOf(this.depth), String.valueOf(this.period), String.valueOf(this.dataNb),
-                String.valueOf(lastCollectDate)};
+                String.valueOf(lastCollectDate), String.valueOf(lastCollectDataNb)};
     }
 
     public List<String[]> getInfo(){
@@ -173,7 +182,7 @@ public class Sensor {
 
         String[] allColumns = { "", "Name",
                 "Sensor ID", "Latitude", "Longitude",
-                "Depth", "Period", "Amount of data", "Last collect date"};
+                "Depth", "Period", "Amount of data", "Last collect date", "Last collect data number"};
         for(int i = 1; i< SensorDB.NB_OF_FIELDS; i++){
             String[] item_couple = new String[]{allColumns[i], infoArray[i-1]};
             infoList.add(item_couple);

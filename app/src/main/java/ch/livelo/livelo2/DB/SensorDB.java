@@ -12,7 +12,7 @@ import android.util.Log;
 public class SensorDB extends SQLiteOpenHelper {
 
     //Attributes
-    public static int NB_OF_FIELDS = 9;
+    public static int NB_OF_FIELDS = 10;
     public static final String TABLE_SENSORS = "sensors";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "Name";
@@ -24,10 +24,11 @@ public class SensorDB extends SQLiteOpenHelper {
     public static final String COLUMN_LASTSTART = "laststart";
     public static final String COLUMN_DATANB = "datanb";
     public static final String COLUMN_LASTCOLLECT = "lastcollect";
+    public static final String COLUMN_LASTCOLLECTDATANB = "lastcollectdatanb";
 
     public static String[] allColumns = { COLUMN_ID, COLUMN_NAME,
             COLUMN_SENSOR_ID, COLUMN_LATITUDE, COLUMN_LONGITUDE,
-            COLUMN_DEPTH, COLUMN_PERIOD, COLUMN_LASTSTART, COLUMN_DATANB, COLUMN_LASTCOLLECT};
+            COLUMN_DEPTH, COLUMN_PERIOD, COLUMN_LASTSTART, COLUMN_DATANB, COLUMN_LASTCOLLECT, COLUMN_LASTCOLLECTDATANB};
 
     //Other info
     protected static final String DATABASE_NAME = "sensors.db";
@@ -45,7 +46,8 @@ public class SensorDB extends SQLiteOpenHelper {
             + COLUMN_PERIOD + " REAL, "
             + COLUMN_LASTSTART + " REAL, "
             + COLUMN_DATANB + " INTEGER, "
-            + COLUMN_LASTCOLLECT + " INTEGER);";
+            + COLUMN_LASTCOLLECT + " INTEGER, "
+            + COLUMN_LASTCOLLECTDATANB + " INTEGER);";
 
     public SensorDB(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

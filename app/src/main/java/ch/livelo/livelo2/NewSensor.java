@@ -1,49 +1,21 @@
 package ch.livelo.livelo2;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;import android.os.Bundle;
-import android.view.View;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place; // "Place" is not resolved
-import com.google.android.gms.location.places.ui.PlacePicker; // "ui" is not resolved
-import com.google.android.gms.maps.model.LatLng;
 import ch.livelo.livelo2.DB.Sensor;
 import ch.livelo.livelo2.DB.SensorDAO;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.util.ArrayList;
-
-import ch.livelo.livelo2.DB.Sensor;
 
 import static java.lang.String.valueOf;
 
@@ -155,8 +127,8 @@ public class NewSensor extends Activity {
             Toast.makeText(NewSensor.this, "You must enter a name and an ID at least.", Toast.LENGTH_SHORT).show();
             return;
         }else if(sensorDAO.exists(sensor.getId())) {
-            sensorDAO.updateSensor(sensor.getId(),Double.parseDouble(latitude_edit.getText().toString()),Double.parseDouble(longitude_edit.getText().toString()),
-                    Double.parseDouble(depth_edit.getText().toString()),-1,-1,-1,-1);
+            sensorDAO.updateSensor(sensor.getId(), name_edit.getText().toString(), Double.parseDouble(latitude_edit.getText().toString()),Double.parseDouble(longitude_edit.getText().toString()),
+                    Double.parseDouble(depth_edit.getText().toString()),-1,-1,-1,-1, -1);
             //sensorDAO.deleteSensor(sensor.getId());
             Toast.makeText(NewSensor.this, "Sensor updated", Toast.LENGTH_SHORT).show();
         }else {

@@ -107,7 +107,7 @@ public class NfcLivelo {
                 }
 
                 //Update sensor info
-                sensorDAO.updateSensor(sensor_id, -1, -1, -1, -1, 0, dataCount, now);
+                sensorDAO.updateSensor(sensor_id, "null", -1, -1, -1, -1, 0, dataCount, now, -1);
                 dataDAO.transactionEnds();
                 dataDAO.close();
                 sensorDAO.close();

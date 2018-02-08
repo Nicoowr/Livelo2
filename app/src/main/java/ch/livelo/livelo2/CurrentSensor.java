@@ -428,7 +428,7 @@ public class CurrentSensor extends AppCompatActivity
                 }
                 if (NfcLivelo.launchSampling(period, nfcv)) {
 
-                    sensorDAO.updateSensor(id, -1, -1, -1, period, System.currentTimeMillis(), -1, -1);
+                    sensorDAO.updateSensor(id, "null", -1, -1, -1, period, System.currentTimeMillis(), -1, -1, -1);
                     Toast.makeText(getBaseContext(), "Sampling launched every " + period + " seconds", Toast.LENGTH_SHORT).show();
                 }
                 else Toast.makeText(getBaseContext(), "Error: sampling not launched", Toast.LENGTH_SHORT).show();
@@ -791,8 +791,10 @@ public class CurrentSensor extends AppCompatActivity
 
             sensorDAO = new SensorDAO(CurrentSensor.this);
             sensorDAO.open();
-            sensorDAO.updateSensor(data.getSensorID(), -1, -1, -1, -1, 0, numberSamples, now);
+            Sensor sensor = sensorDAO.getSensor(id);
+            sensorDAO.updateSensor(data.getSensorID(), "null", -1, -1, -1, -1, 0, numberSamples, now, sensor.getLastCollectDataNb() + numberSamples);
             sensorDAO.close();
+            // WARNING: two collects data without sending data will result in a bad time interpolation
 
             NfcLivelo.resetCollect(nfcv);
 
