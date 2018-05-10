@@ -2,7 +2,10 @@ package ch.livelo.livelo2.DB;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -10,6 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -97,6 +103,7 @@ public class Data {
             return true;
         }
 
+
         call_context = context;
         JSONObject postData = new JSONObject();
         try {
@@ -115,9 +122,42 @@ public class Data {
             return false;
         }
 
-        new Data.httpRequest().execute("https://alpha.thinkee.ch/http/livelo", "POST", postData.toString(), token);
-        sensor.setLastCollectDataNb(0);//To be sure it does not send twice any data
-        sensorDAO.updateSensor(sensor.getId(), "null", -1, -1, -1, -1, -1, -1, -1, 0);
+        /////////////////// Create JSON file
+        String filename = "data_" + sensor_id + "_" + this.timeStamp.get(timeStamp.size() - (int) this.lastCollectDataNb) + "_" +  this.timeStamp.get(timeStamp.size() - 1) +".json";
+
+        try {
+            String content = postData.toString();
+            File file = new File(filename);
+            // if file doesnt exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(content);
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ////////////////////////////
+
+        File filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
+        Uri path = Uri.fromFile(filelocation);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+// set the type to 'email'
+        emailIntent .setType("vnd.android.cursor.dir/email");
+        String to[] = {"nicolas.li@hotmail.fr"};
+        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
+// the attachment
+        emailIntent .putExtra(Intent.EXTRA_STREAM, path);
+// the mail subject
+        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        call_context.startActivity(Intent.createChooser(emailIntent , "Send email..."));
+        //new Data.httpRequest().execute("https://alpha.thinkee.ch/http/livelo", "POST", postData.toString(), token);
+        //sensor.setLastCollectDataNb(0);//To be sure it does not send twice any data
+        //sensorDAO.updateSensor(sensor.getId(), "null", -1, -1, -1, -1, -1, -1, -1, 0);
 
         sensorDAO.close();
         return true;
